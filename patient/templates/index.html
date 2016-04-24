@@ -33,6 +33,7 @@
           <th>Date</th>
           <th>Duration [s]</th>
           <th>Description</th>
+          <th></th>
       </tr>
     {% for seizure in seizures|slice:":10" %}
       <tr>
@@ -40,6 +41,11 @@
           <td>{{ seizure.time|date:"d-m-Y H:i:s" }}</td>
           <td>{{ seizure.duration }}</td>
           <td>{{ seizure.description|truncatewords:20 }}</td>
+          <td>
+            <button type="button" class="btn btn-default" aria-label="Edit">
+                <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+            </button>
+          </td>
       </tr>
     {% endfor %}
   </table>
