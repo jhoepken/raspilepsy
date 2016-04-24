@@ -1,27 +1,40 @@
 {% extends 'base.html' %}
-{% block title %}Welcome to my blog{% endblock %}
+{% block title %}Dashboard{% endblock %}
 
 {% block content %}
-    <h2>Categories</h2>
-    {% if categories %}
-        <ul>
-        {% for category in categories %}
-            <li><a href="{{ category.get_absolute_url }}">{{ category.title }}</a></li>
-        {% endfor %}
-        </ul>
-    {% else %}
-        <p>There are no posts.</p>
-    {% endif %}
+<div class="page-header">
+  <h2>Add Seizure</h2>
 
-    <h2>Posts</h2>
-    {% if posts %}
-        <ul>
-        {% for post in posts %}
-            <li><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></li>
-        {% endfor %}
-        </ul>
-    {% else %}
-        <p>There are no posts.</p>
-    {% endif %}
+  <form action="/" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-default btn-lg" value="Submit">
+        <span class="glyphicon glyphicon-flash" aria-hidden="true"></span> Seizure now
+    </button>
+</form>
+</div>
+
+<div class="panel panel-default">
+  <!-- Default panel contents -->
+  <div class="panel-heading">Recent Seizures</div>
+
+  <!-- Table -->
+  <table class="table">
+      <tr>
+          <th>#</th>
+          <th>Date</th>
+          <th>Duration [s]</th>
+          <th>Description</th>
+      </tr>
+    {% for seizure in seizures|slice:":10" %}
+      <tr>
+          <td>{{ forloop.counter }}</td>
+          <td>{{ seizure.time|date:"d-m-Y H:i:s" }}</td>
+          <td>{{ seizure.duration }}</td>
+          <td>{{ seizure.description|truncatewords:20 }}</td>
+      </tr>
+    {% endfor %}
+  </table>
+</div>
 
 {% endblock %}

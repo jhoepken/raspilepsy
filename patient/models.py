@@ -6,7 +6,7 @@ from django.db import models
 
 class Seizure(models.Model):
 
-    time = models.DateTimeField('seizure time')
+    time = models.DateTimeField('seizure time', auto_now_add=True)
     duration = models.IntegerField('duration in seconds')
     description = models.TextField(max_length=5000)
 
