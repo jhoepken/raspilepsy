@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block title %}Monitoring{% endblock %}
+
+{% block content %}
+
+<div class="panel panel-default">
+  <!-- Default panel contents -->
+  <div class="panel-heading">Last Night</div>
+
+  <!-- Table -->
+  <table class="table">
+      <tr>
+          <th>#</th>
+          <th>Date</th>
+          <th>Duration [s]</th>
+          <th>Description</th>
+          <th></th>
+      </tr>
+    {% for seizure in seizures|slice:":10" %}
+      <tr>
+          <td>{{ forloop.counter }}</td>
+          <td>{{ seizure.time|date:"d-m-Y H:i:s" }}</td>
+          <td>{{ seizure.duration }}</td>
+          <td>{{ seizure.description|truncatewords:20 }}</td>
+          <td>
+            <button type="button" class="btn btn-default" aria-label="Edit">
+                <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+            </button>
+          </td>
+      </tr>
+    {% endfor %}
+  </table>
+</div>
+
+{% endblock %}

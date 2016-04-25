@@ -2,6 +2,8 @@ from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
 
+from datetime import datetime, timedelta
+
 from .forms import QuickAddSeizure
 from patient.models import Seizure
 
@@ -28,3 +30,9 @@ def index(request):
 
     return render(request, 'index.html', context)
 
+def monitor(request):
+
+    seizures = Seizure.objects.all()
+    context = {'seizures': seizures}
+
+    return render(request, 'monitor.html', context)
