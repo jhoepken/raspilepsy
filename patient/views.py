@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
 
-from datetime import datetime, timedelta
+from os.path import join
 
 from .forms import QuickAddSeizure
 from patient.models import Seizure
@@ -35,3 +35,38 @@ def monitor(request):
     context = {'seizures': seizures}
 
     return render(request, 'monitor.html', context)
+
+def monitorStatistics(request):
+
+    seizures = Seizure.objects.all()
+    context = {'seizures': seizures}
+
+
+    return render(request, 'monitorStatistics.html', context)
+
+def seizureDistribution(request):
+    from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
+    from matplotlib.figure import Figure
+    from matplotlib.dates import DateFormatter
+
+    seizures = Seizure.objects.all()
+    context = {'seizures': seizures}
+
+    time = [seizure.time for seizure in seizures]
+    duration = [seizure.duration for seizure in seizures]
+
+    fig=Figure(facecolor="white")
+    ax=fig.add_subplot(111)
+    # ax.set_xlabel("Time")
+    ax.set_ylabel("Seizure Duration [s]")
+    ax.grid(True)
+    ax.plot_date(time, duration, '-', marker='o')
+    ax.xaxis.set_major_formatter(DateFormatter('%Y-%m-%d %H:%M:%S'))
+    fig.autofmt_xdate()
+
+    canvas=FigureCanvas(fig)
+
+    response=HttpResponse(content_type='image/png')
+    canvas.print_png(response)
+
+    return response
