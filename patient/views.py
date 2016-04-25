@@ -22,7 +22,6 @@ def index(request):
             seizure.save()
             form.clean()
             return HttpResponseRedirect('')
-            # return render(request, 'index.html', context)
 
     else:
         form = QuickAddSeizure()
