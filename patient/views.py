@@ -61,7 +61,7 @@ def seizureDistribution(request):
     ax.set_ylabel("Seizure Duration [s]")
     ax.grid(True)
     ax.plot_date(time, duration, '-', marker='o')
-    ax.xaxis.set_major_formatter(DateFormatter('%Y-%m-%d %H:%M:%S'))
+    ax.xaxis.set_major_formatter(DateFormatter('%Y-%m-%d %H:%M'))
     fig.autofmt_xdate()
 
     canvas=FigureCanvas(fig)
