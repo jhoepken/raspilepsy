@@ -55,7 +55,7 @@ def seizureDistribution(request):
     time = [seizure.time for seizure in seizures]
     duration = [seizure.duration for seizure in seizures]
 
-    fig=Figure(facecolor="white")
+    fig=Figure(facecolor="white",figsize=(12, 6))
     ax=fig.add_subplot(111)
     # ax.set_xlabel("Time")
     ax.set_ylabel("Seizure Duration [s]")
