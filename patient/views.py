@@ -80,6 +80,7 @@ def seizureFrequency(request):
 
     days = Seizure.objects.getDaysWithSeizures()
     context = {'seizures': seizures}
+    seizureFrequency = Seizure.objects.getSeizuresPerNight()
 
     time = [seizure.time for seizure in seizures]
     duration = [seizure.duration for seizure in seizures]
@@ -92,6 +93,10 @@ def seizureFrequency(request):
     ax.hist(duration, bins=len(days) )
     # ax.xaxis.set_major_formatter(DateFormatter('%Y-%m-%d %H:%M'))
     fig.autofmt_xdate()
+    ax.bar(days, seizureFrequency, width=0.8)
+    ax.xaxis_date()
+    ax.xaxis.set_major_formatter(DateFormatter('%Y-%m-%d'))
+    # fig.autofmt_xdate()
 
     canvas=FigureCanvas(fig)
 

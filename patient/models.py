@@ -26,6 +26,20 @@ class SeizureManager(models.Manager):
         dateRange = [base - datetime.timedelta(days=x) for x in reversed(range(0, timeRange.days))]
         return dateRange
 
+    def getSeizuresPerNight(self):
+        from datetime import timedelta
+        days = self.getDaysWithSeizures()
+
+        seizures = []
+
+        for day in days:
+            startTime = day - timedelta(hours=10)
+            endTime = day + timedelta(hours=13, minutes=59)
+
+            seizures.append(self.filter(time__range=(startTime, endTime)))
+
+        return [len(sI) for sI in seizures]
+
     def getOldestSeizure(self):
         """
         Returns the oldest seizure that is stored in the database
