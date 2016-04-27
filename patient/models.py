@@ -23,7 +23,7 @@ class SeizureManager(models.Manager):
                         "%Y-%m-%d"),
                      "%Y-%m-%d")
         timeRange = base-oldest
-        dateRange = [base - datetime.timedelta(days=x) for x in range(0, timeRange.days)]
+        dateRange = [base - datetime.timedelta(days=x) for x in reversed(range(0, timeRange.days))]
         return dateRange
 
     def getOldestSeizure(self):
