@@ -89,7 +89,7 @@ def seizureFrequency(request):
     # ax.set_xlabel("Time")
     ax.set_ylabel("Seizures [-]")
     ax.grid(True)
-    ax.bar(days, seizureFrequency, width=0.8)
+    ax.bar(days, seizureFrequency)
     ax.xaxis_date()
     ax.xaxis.set_major_formatter(DateFormatter('%Y-%m-%d'))
     # fig.autofmt_xdate()
