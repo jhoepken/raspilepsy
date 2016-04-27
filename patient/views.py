@@ -79,7 +79,7 @@ def seizureFrequency(request):
     seizures = Seizure.objects.all()
 
     days = Seizure.objects.getDaysWithSeizures()
-    seizureFrequency = Seizure.objects.getSeizuresPerNight()
+    seizureFrequency = [len(sI) for sI in Seizure.objects.getSeizuresPerNight()]
 
     time = [seizure.time for seizure in seizures]
     # duration = [seizure.duration for seizure in seizures]

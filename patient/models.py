@@ -38,7 +38,7 @@ class SeizureManager(models.Manager):
 
             seizures.append(self.filter(time__range=(startTime, endTime)))
 
-        return [len(sI) for sI in seizures]
+        return seizures
 
     def getOldestSeizure(self):
         """
