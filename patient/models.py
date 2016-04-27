@@ -6,6 +6,26 @@ from django.db import models
 
 class SeizureManager(models.Manager):
     def getDaysWithSeizures(self):
+        import datetime, pytz
+
+        pytz.timezone("Europe/Berlin")
+
+        oldest = datetime.datetime.strptime(
+                    datetime.datetime.strftime(
+                        self.getOldestSeizure().time,
+                        "%Y-%m-%d"),
+                    "%Y-%m-%d")
+
+        base = datetime.datetime.strptime(
+                    datetime.datetime.strftime(
+                        pytz.utc.localize(
+                            datetime.datetime.today()),
+                        "%Y-%m-%d"),
+                     "%Y-%m-%d")
+        timeRange = base-oldest
+        dateRange = [base - datetime.timedelta(days=x) for x in range(0, timeRange.days)]
+        return dateRange
+
     def getOldestSeizure(self):
         """
         Returns the oldest seizure that is stored in the database
