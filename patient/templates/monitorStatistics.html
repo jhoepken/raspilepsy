@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% block title %}Monitoring Statistics{% endblock %}
+
+{% block content %}
+
+{% load staticfiles %}
+
+<div class="container">
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">Seizure Duration over Time</div>
+                <div class="panel-body">
+                    <img src="/monitor/statistics/seizureDistribution.png">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">Seizure Frequency per Night (between 14:00h and 13:59h)</div>
+                <div class="panel-body">
+                    <img src="/monitor/statistics/seizureFrequency.png">
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}
