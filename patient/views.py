@@ -106,7 +106,7 @@ def dailySeizureDistributionComparison(request):
     from matplotlib.figure import Figure
     from matplotlib.dates import DateFormatter
     from datetime import timedelta
-    import numpy as np
+    from numpy import array as npArray
 
     import seaborn as sns
     sns.set(style="darkgrid", palette="Set2")
@@ -125,7 +125,7 @@ def dailySeizureDistributionComparison(request):
     labels = []
     for setI in range(len(duration)):
         p, = ax.plot(
-                    np.array(time[setI]) - timedelta(days=setI, hours=-2),
+                    npArray(time[setI]) - timedelta(days=setI, hours=-2),
                     duration[setI],
                     marker='o'
                     )
