@@ -121,8 +121,18 @@ def dailySeizureDistributionComparison(request):
         duration.append([dayI.duration for dayI in day])
         time.append([dayI.time for dayI in day])
 
+    plots = []
+    labels = []
     for setI in range(len(duration)):
-        ax.plot(np.array(time[setI]) - timedelta(days=setI), duration[setI])
+        p, = ax.plot(
+                    np.array(time[setI]) - timedelta(days=setI),
+                    duration[setI],
+                    marker='o'
+                    )
+        plots.append(p)
+        labels.append("%s" %time[setI][0].strftime("%d-%m-%Y"))
+
+    fig.legend(plots, labels, 'upper right')
     fig.autofmt_xdate()
     ax.grid(True)
 
