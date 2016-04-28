@@ -125,16 +125,19 @@ def dailySeizureDistributionComparison(request):
     labels = []
     for setI in range(len(duration)):
         p, = ax.plot(
-                    np.array(time[setI]) - timedelta(days=setI),
+                    np.array(time[setI]) - timedelta(days=setI, hours=-2),
                     duration[setI],
                     marker='o'
                     )
         plots.append(p)
         labels.append("%s" %time[setI][0].strftime("%d-%m-%Y"))
 
-    fig.legend(plots, labels, 'upper right')
+
+    fig.legend(plots, labels, 'upper right', bbox_to_anchor=(1.01, 1))
     fig.autofmt_xdate()
     ax.grid(True)
+    ax.set_xlabel("Time of sampling interval [h]")
+    ax.set_ylabel("Seizure duration [s]")
 
     canvas=FigureCanvas(fig)
     response=HttpResponse(content_type='image/png')
