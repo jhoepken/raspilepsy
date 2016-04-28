@@ -85,13 +85,13 @@ def seizureFrequency(request):
     # duration = [seizure.duration for seizure in seizures]
 
     fig=Figure(facecolor="white",figsize=(12, 6))
-    ax=fig.add_subplot(111)
-    # ax.set_xlabel("Time")
-    ax.set_ylabel("Seizures [-]")
-    ax.grid(True)
-    ax.bar(days, seizureFrequency)
-    ax.xaxis_date()
-    ax.xaxis.set_major_formatter(DateFormatter('%Y-%m-%d'))
+    ax1=fig.add_subplot(111)
+    # ax1.set_xlabel("Time")
+    ax1.set_ylabel("Seizures [-]")
+    ax1.grid(True)
+    ax1.bar(days, seizureFrequency)
+    ax1.xaxis_date()
+    ax1.xaxis.set_major_formatter(DateFormatter('%Y-%m-%d'))
     # fig.autofmt_xdate()
 
     canvas=FigureCanvas(fig)
