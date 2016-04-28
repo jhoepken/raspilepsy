@@ -75,7 +75,7 @@ def seizureFrequency(request):
     from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
     from matplotlib.figure import Figure
     from matplotlib.dates import DateFormatter
-    from numpy import mean, array, log10, max
+    from numpy import mean, array, max
 
     seizures = Seizure.objects.all()
 
