@@ -100,3 +100,34 @@ def seizureFrequency(request):
     canvas.print_png(response)
 
     return response
+
+def dailySeizureDistributionComparison(request):
+    from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
+    from matplotlib.figure import Figure
+    from matplotlib.dates import DateFormatter
+    from datetime import timedelta
+    import numpy as np
+
+    import seaborn as sns
+    sns.set(style="darkgrid", palette="Set2")
+    
+    seizureFrequency = Seizure.objects.getSeizuresPerNight()
+    fig=Figure(facecolor="white",figsize=(12, 6))
+    ax=fig.add_subplot(111)
+
+    duration = []
+    time = []
+    for day in seizureFrequency:
+        duration.append([dayI.duration for dayI in day])
+        time.append([dayI.time for dayI in day])
+
+    for setI in range(len(duration)):
+        ax.plot(np.array(time[setI]) - timedelta(days=setI), duration[setI])
+    fig.autofmt_xdate()
+    ax.grid(True)
+
+    canvas=FigureCanvas(fig)
+    response=HttpResponse(content_type='image/png')
+    canvas.print_png(response)
+
+    return response

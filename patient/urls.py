@@ -8,5 +8,8 @@ urlpatterns = [
     url(r'^monitor/statistics$', views.monitorStatistics, name='monitorStatistics'),
     url(r'^monitor/statistics/seizureDistribution.png$', views.seizureDistribution, name='seizureDistribution'),
     url(r'^monitor/statistics/seizureFrequency.png$', views.seizureFrequency, name='seizureFrequency'),
+    url(r'^monitor/statistics/dailySeizureDistributionComparison.png$',
+        views.dailySeizureDistributionComparison,
+        name='dailySeizureDistributionComparison'),
 ]
 
