@@ -79,7 +79,7 @@ def seizureFrequency(request):
     seizures = Seizure.objects.all()
 
     days = Seizure.objects.getDaysWithSeizures()
-    seizureFrequency = Seizure.objects.getSeizuresPerNight()
+    seizureFrequency = [len(sI) for sI in Seizure.objects.getSeizuresPerNight()]
 
     time = [seizure.time for seizure in seizures]
     # duration = [seizure.duration for seizure in seizures]
@@ -96,6 +96,50 @@ def seizureFrequency(request):
 
     canvas=FigureCanvas(fig)
 
+    response=HttpResponse(content_type='image/png')
+    canvas.print_png(response)
+
+    return response
+
+def dailySeizureDistributionComparison(request):
+    from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
+    from matplotlib.figure import Figure
+    from matplotlib.dates import DateFormatter
+    from datetime import timedelta
+    from numpy import array as npArray
+
+    import seaborn as sns
+    sns.set(style="darkgrid", palette="Set2")
+    
+    seizureFrequency = Seizure.objects.getSeizuresPerNight()
+    fig=Figure(facecolor="white",figsize=(12, 6))
+    ax=fig.add_subplot(111)
+
+    duration = []
+    time = []
+    for day in seizureFrequency:
+        duration.append([dayI.duration for dayI in day])
+        time.append([dayI.time for dayI in day])
+
+    plots = []
+    labels = []
+    for setI in range(len(duration)):
+        p, = ax.plot(
+                    npArray(time[setI]) - timedelta(days=setI, hours=-2),
+                    duration[setI],
+                    marker='o'
+                    )
+        plots.append(p)
+        labels.append("%s" %time[setI][0].strftime("%d-%m-%Y"))
+
+
+    fig.legend(plots, labels, 'upper right', bbox_to_anchor=(1.01, 1))
+    fig.autofmt_xdate()
+    ax.grid(True)
+    ax.set_xlabel("Time of sampling interval [h]")
+    ax.set_ylabel("Seizure duration [s]")
+
+    canvas=FigureCanvas(fig)
     response=HttpResponse(content_type='image/png')
     canvas.print_png(response)
 
