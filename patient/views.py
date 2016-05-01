@@ -35,8 +35,6 @@ def index(request):
     return render(request, 'index.html', context)
 
 def camera(request):
-    # for key,value in request.POST.iteritems():
-        # print key, value
     if request.POST["action"] == "cameraStart":
         print "STARTING CAMERA"
 
