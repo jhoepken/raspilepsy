@@ -56,3 +56,11 @@ class Seizure(models.Model):
 
     def __str__(self):
         return self.description
+
+
+class RawVideoCapture(models.Model):
+
+    startTime = models.DateTimeField('start time', auto_now_add=True)
+    path = models.FileField(upload_to='footage/%Y/%m/%d')
+
+
