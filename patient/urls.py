@@ -11,5 +11,7 @@ urlpatterns = [
     url(r'^monitor/statistics/dailySeizureDistributionComparison.png$',
         views.dailySeizureDistributionComparison,
         name='dailySeizureDistributionComparison'),
+
+    url(r'^camera$', views.index, name='index'),
 ]
 
