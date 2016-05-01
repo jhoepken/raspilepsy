@@ -18,7 +18,10 @@ def index(request):
         context['form'] = form
 
         if form.is_valid():
-            seizure = Seizure(duration=request.POST.get("duration",""), description=request.POST.get("description",""))
+            seizure = Seizure(
+                        duration=request.POST.get("duration",""),
+                        description=request.POST.get("description","")
+                        )
             seizure.save()
             form.clean()
             return HttpResponseRedirect('')
