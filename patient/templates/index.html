@@ -33,10 +33,13 @@
             </div>
             <div class=panel-body>
 
-                  <form action="/" method="post">
+                  <form action="/camera" method="post">
                     {% csrf_token %}
-                    <button type="submit" class="btn btn-default btn-lg" value="Submit">
-                        <span class="glyphicon glyphicon-play" aria-hidden="true"></span> Start/Stop Camera
+                    <button name="action" class="btn btn-default btn-lg" value="start">
+                        <span class="glyphicon glyphicon-play" aria-hidden="true"></span> Start Camera
+                    </button>
+                    <button name="action" class="btn btn-default btn-lg" value="stop">
+                        <span class="glyphicon glyphicon-stop" aria-hidden="true"></span> Stop Camera
                     </button>
                 </form>
             </div>
