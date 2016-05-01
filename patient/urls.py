@@ -12,6 +12,6 @@ urlpatterns = [
         views.dailySeizureDistributionComparison,
         name='dailySeizureDistributionComparison'),
 
-    url(r'^camera$', views.index, name='index'),
+    url(r'^camera$', views.camera, name='camera'),
 ]
 
