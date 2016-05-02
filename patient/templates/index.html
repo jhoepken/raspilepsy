@@ -6,25 +6,46 @@
 
 <div class="container">
 <div class="row">
-<div class="col-md-8">
+    <div class="col-md-6">
 
-<div class="panel panel-primary">
-    <div class=panel-heading>
-        <h3 class=panel-title>Add Seizure</h3>
+        <div class="panel panel-primary">
+            <div class=panel-heading>
+                <h3 class=panel-title>Add Seizure</h3>
+            </div>
+            <div class=panel-body>
+
+                  <form action="/" method="post">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button type="submit" class="btn btn-default btn-lg" value="Submit">
+                        <span class="glyphicon glyphicon-flash" aria-hidden="true"></span> Seizure now
+                    </button>
+                </form>
+            </div>
+        </div>
     </div>
-    <div class=panel-body>
 
-  <form action="/" method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="btn btn-default btn-lg" value="Submit">
-        <span class="glyphicon glyphicon-flash" aria-hidden="true"></span> Seizure now
-    </button>
-</form>
+    <div class="col-md-6">
 
+        <div class="panel panel-primary">
+            <div class=panel-heading>
+                <h3 class=panel-title>Video Capture</h3>
+            </div>
+            <div class=panel-body>
+
+                  <form action="/camera" method="post">
+                    {% csrf_token %}
+                    {{ form_startStopCamera }}
+                    <button name="action" class="btn btn-default btn-lg" value="cameraStart">
+                        <span class="glyphicon glyphicon-play" aria-hidden="true"></span> Start Camera
+                    </button>
+                    <button name="action" class="btn btn-default btn-lg" value="cameraStop">
+                        <span class="glyphicon glyphicon-stop" aria-hidden="true"></span> Stop Camera
+                    </button>
+                </form>
+            </div>
+        </div>
     </div>
-</div>
-</div>
 </div>
 
 </div>

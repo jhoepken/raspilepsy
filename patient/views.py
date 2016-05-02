@@ -7,6 +7,9 @@ from os.path import join
 from .forms import QuickAddSeizure
 from patient.models import Seizure
 
+import patient.video
+
+
 
 def index(request):
 
@@ -18,7 +21,10 @@ def index(request):
         context['form'] = form
 
         if form.is_valid():
-            seizure = Seizure(duration=request.POST.get("duration",""), description=request.POST.get("description",""))
+            seizure = Seizure(
+                        duration=request.POST.get("duration",""),
+                        description=request.POST.get("description","")
+                        )
             seizure.save()
             form.clean()
             return HttpResponseRedirect('')
@@ -28,6 +34,18 @@ def index(request):
         context['form'] = form
 
     return render(request, 'index.html', context)
+
+def camera(request):
+    if request.POST["action"] == "cameraStart":
+        print "STARTING CAMERA"
+        patient.video.running = True
+
+    elif request.POST["action"] == "cameraStop": 
+        print "STOPPING CAMERA"
+
+    return render(request, 'index.html', {})
+
+
 
 def monitor(request):
 
