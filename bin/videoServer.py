@@ -5,7 +5,7 @@ import time
 import argparse
 import cv2
 
-def hasMotion():
+def hasMotion(frame):
 
     return True
 
