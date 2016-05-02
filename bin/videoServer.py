@@ -50,11 +50,13 @@ def highlightMotion(frame, firstFrame):
 
     cv2.putText(frame, "Room Status: {}".format(text), (10, 20),
     cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
-    cv2.putText(frame, datetime.datetime.now().strftime("%A %d %B %Y %I:%M:%S%p"),
-    (10, frame.shape[0] - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (0, 0, 255), 1)
 
     return frame
 
+def annotateTime(frame):
+    cv2.putText(frame, datetime.datetime.now().strftime("%A %d %B %Y %I:%M:%S%p"),
+    (10, frame.shape[0] - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (0, 0, 255), 1)
+    return frame
 
 def hasMotion(frame):
 
@@ -80,6 +82,7 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
     if hasMotion(image):
         image = highlightMotion(image, firstFrame)
 
+    image = annotateTime(image)
     # show the frame
     cv2.imshow("Frame", image)
     key = cv2.waitKey(1) & 0xFF
