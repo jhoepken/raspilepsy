@@ -37,7 +37,7 @@ firstFrame = None
 while True:
     (grabbed, frame) = camera.read()
 
-    text = "No seizure"
+    status = "No seizure"
 
     # If the frame cannot be grabbed, the end of the video has been reached.
     if not grabbed:
@@ -74,7 +74,7 @@ while True:
         # and update the text
         (x, y, w, h) = cv2.boundingRect(c)
         cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
-        text = "Seizure"
+        status = "Seizure"
 
         frame = annotate(frame, status)
 
