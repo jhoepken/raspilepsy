@@ -19,18 +19,24 @@ def initPiCamera():
 
     return (camera, rawCapture)
 
-def highlightMotion(frame, firstFrame):
+def highlightMotion(frame, avg):
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     gray = cv2.GaussianBlur(gray, (21, 21), 0)
 
     text = "No Seizure"
     
-    if firstFrame is None:
-        firstFrame = gray
+    # if the average frame is None, initialize it
+    if avg is None:
+        avg = gray.copy().astype("float")
+        # rawCapture.truncate(0)
+        # continue
+ 
+    # accumulate the weighted average between the current frame and
+    # previous frames, then compute the difference between the current
+    # frame and running average
+    cv2.accumulateWeighted(gray, avg, 0.5)
+    frameDelta = cv2.absdiff(gray, cv2.convertScaleAbs(avg))
 
-    # compute the absolute difference between the current frame and
-    # first frame
-    frameDelta = cv2.absdiff(firstFrame, gray)
     thresh = cv2.threshold(frameDelta, 25, 255, cv2.THRESH_BINARY)[1]
 
     # dilate the thresholded image to fill in holes, then find contours
@@ -56,7 +62,7 @@ def highlightMotion(frame, firstFrame):
     cv2.putText(frame, "Room Status: {}".format(text), (10, 20),
     cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
 
-    return (frame, firstFrame)
+    return (frame, avg)
 
 def annotateTime(frame):
     cv2.putText(frame, datetime.datetime.now().strftime("%A %d %B %Y %I:%M:%S%p"),
