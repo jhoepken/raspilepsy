@@ -18,6 +18,12 @@ def annotate(frame, status):
 
     return frame
 
+def displayVideoFeeds():
+    cv2.imshow("Security Feed", frame)
+    cv2.imshow("Thresh", thresh)
+    cv2.imshow("Frame Delta", frameDelta)
+
+
 ap = argparse.ArgumentParser()
 ap.add_argument("-v", "--video", help="Path to the video file")
 ap.add_argument("-a", "--min-area", type=int, default=500, help="minimum area size")
@@ -79,9 +85,7 @@ while True:
         frame = annotate(frame, status)
 
         # show the frame and record if the user presses a key
-        cv2.imshow("Security Feed", frame)
-        cv2.imshow("Thresh", thresh)
-        cv2.imshow("Frame Delta", frameDelta)
+        displayVideoFeeds()
         key = cv2.waitKey(1) & 0xFF
  
 	# if the `q` key is pressed, break from the lop
