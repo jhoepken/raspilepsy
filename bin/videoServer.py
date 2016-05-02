@@ -84,13 +84,7 @@ while True:
 
         frame = annotate(frame, status)
 
-        # show the frame and record if the user presses a key
         displayVideoFeeds()
-        key = cv2.waitKey(1) & 0xFF
- 
-	# if the `q` key is pressed, break from the lop
-        if key == ord("q"):
-            break
  
 # cleanup the camera and close any open windows
 camera.release()
