@@ -5,6 +5,19 @@ import time
 import argparse
 import cv2
 
+def hasMotion():
+
+    return True
+
+def annotate(frame, status):
+    # draw the text and timestamp on the frame
+    cv2.putText(frame, "Room Status: {}".format(status), (10, 20),
+            cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
+    cv2.putText(frame, datetime.datetime.now().strftime("%A %d %B %Y %I:%M:%S%p"),
+            (10, frame.shape[0] - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (0, 0, 255), 1)
+
+    return frame
+
 ap = argparse.ArgumentParser()
 ap.add_argument("-v", "--video", help="Path to the video file")
 ap.add_argument("-a", "--min-area", type=int, default=500, help="minimum area size")
@@ -63,11 +76,7 @@ while True:
         cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
         text = "Seizure"
 
-        # draw the text and timestamp on the frame
-        cv2.putText(frame, "Room Status: {}".format(text), (10, 20),
-                cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
-        cv2.putText(frame, datetime.datetime.now().strftime("%A %d %B %Y %I:%M:%S%p"),
-                (10, frame.shape[0] - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (0, 0, 255), 1)
+        frame = annotate(frame, status)
 
         # show the frame and record if the user presses a key
         cv2.imshow("Security Feed", frame)
