@@ -39,9 +39,13 @@ def highlightMotion(frame, firstFrame):
     (cnts, _) = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL,
     cv2.CHAIN_APPROX_SIMPLE)
 
+    cv2.imshow("gray", gray)
+    cv2.imshow("thres", thresh)
+    cv2.imshow("frameDelta", frameDelta)
+
     for c in cnts:
-        # if cv2.contourArea(c) < args["min_area"]:
-            # continue
+        if cv2.contourArea(c) < args["min_area"]:
+            continue
 
         # compute the bounding box for the contour, draw it on the frame,
         # and update the text
@@ -52,7 +56,7 @@ def highlightMotion(frame, firstFrame):
     cv2.putText(frame, "Room Status: {}".format(text), (10, 20),
     cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
 
-    return frame
+    return (frame, firstFrame)
 
 def annotateTime(frame):
     cv2.putText(frame, datetime.datetime.now().strftime("%A %d %B %Y %I:%M:%S%p"),
@@ -72,16 +76,15 @@ args = vars(ap.parse_args())
 if args.get("video", None) is None:
     camera, rawCapture = initPiCamera()
 
+firstFrame = None
 # capture frames from the camera
 for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
     # grab the raw NumPy array representing the image, then initialize the timestamp
     # and occupied/unoccupied text
     image = frame.array
 
-    firstFrame = None
-
     if hasMotion(image):
-        image = highlightMotion(image, firstFrame)
+        (image, firstFrame) = highlightMotion(image, firstFrame)
 
     image = annotateTime(image)
     # show the frame
