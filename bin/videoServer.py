@@ -8,6 +8,7 @@ from picamera.array import PiRGBArray
 from picamera import PiCamera
 
 resolution = (960, 540)
+lastMotion = int(datetime.datetime.now().strftime("%s"))
 
 def initPiCamera():
     camera = PiCamera()
@@ -19,7 +20,7 @@ def initPiCamera():
 
     return (camera, rawCapture)
 
-def highlightMotion(frame, avg):
+def highlightMotion(frame, avg, lastMotion):
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     gray = cv2.GaussianBlur(gray, (21, 21), 0)
 
@@ -53,10 +54,17 @@ def highlightMotion(frame, avg):
         cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 1)
         text = "Seizure"
 
+        lastMotion = int(datetime.datetime.now().strftime("%s"))
+
     cv2.putText(frame, "Status: {}".format(text), (10, 20),
     cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
 
-    return (frame, avg)
+    if int(datetime.datetime.now().strftime("%s")) - lastMotion > args["motion_buffer"]:
+        hasMotion = False
+    else:
+        hasMotion = True
+
+    return (frame, avg, hasMotion, lastMotion)
 
 def annotateTime(frame):
     cv2.putText(frame, datetime.datetime.now().strftime("%A %d %B %Y %I:%M:%S%p"),
@@ -67,11 +75,15 @@ def annotateTime(frame):
 ap = argparse.ArgumentParser()
 ap.add_argument("-v", "--video", help="Path to the video file")
 ap.add_argument("-a", "--min-area", type=int, default=500, help="minimum area size")
+ap.add_argument("-b", "--motion-buffer", type=int, default=1, help="Minutes to keep recording after no motion has been detected")
 args = vars(ap.parse_args())
 
 # Read from live from camera
 if args.get("video", None) is None:
     camera, rawCapture = initPiCamera()
+
+# cv2.VideoWriter(['testvideo', cv2.CV_FOURCC('M','J','P','G'), 25, 
+               # (640,480),True])
 
 firstFrame = None
 
@@ -79,7 +91,7 @@ firstFrame = None
 for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
     image = frame.array
 
-    (image, firstFrame, hasMotion) = highlightMotion(image, firstFrame)
+    (image, firstFrame, hasMotion, lastMotion) = highlightMotion(image, firstFrame, lastMotion)
 
     image = annotateTime(image)
     # show the frame
