@@ -18,6 +18,13 @@ def initPiCamera():
 
     return (camera, rawCapture)
 
+def highlightMotion():
+    pass
+
+def hasMotion():
+
+    return True
+
 ap = argparse.ArgumentParser()
 ap.add_argument("-v", "--video", help="Path to the video file")
 ap.add_argument("-a", "--min-area", type=int, default=500, help="minimum area size")
