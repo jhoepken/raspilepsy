@@ -7,12 +7,13 @@ import cv2
 from picamera.array import PiRGBArray
 from picamera import PiCamera
 
+resolution = (960, 540)
 
 def initPiCamera():
     camera = PiCamera()
-    camera.resolution = (640, 480)
+    camera.resolution = resolution
     camera.framerate = 32
-    rawCapture = PiRGBArray(camera, size=(640, 480))
+    rawCapture = PiRGBArray(camera, size=resolution)
     
     time.sleep(0.1)
 
