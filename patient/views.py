@@ -10,6 +10,7 @@ from patient.models import Seizure
 import patient.video
 
 
+
 def index(request):
 
     seizures = Seizure.objects.all()
@@ -37,6 +38,7 @@ def index(request):
 def camera(request):
     if request.POST["action"] == "cameraStart":
         print "STARTING CAMERA"
+        patient.video.running = True
 
     elif request.POST["action"] == "cameraStop": 
         print "STOPPING CAMERA"
