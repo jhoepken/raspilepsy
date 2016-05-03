@@ -66,7 +66,17 @@ ap.add_argument(
         resolution! If you change the resolution, bear in mind to change this
         parameter accordingly."""
         )
-ap.add_argument("-b", "--motion-buffer", type=int, default=30, help="Seconds to keep recording after no motion has been detected")
+ap.add_argument(
+        "-b",
+        "--motion-buffer",
+        type=int,
+        default=30,
+        help="""Seconds to keep recording after no motion has been detected.
+        This option is used to prevent the video recording from stopping as soon
+        as no motion is detected by the algorithm, for a single frame. Which
+        usually leads to a lot of very short and useless files that need to be
+        deleted manually later on. It basically acts as a buffer."""
+        )
 args = vars(ap.parse_args())
 
 resolution = args["resolution"]
