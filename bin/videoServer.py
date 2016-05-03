@@ -91,7 +91,8 @@ ap.add_argument(
         This option is used to prevent the video recording from stopping as soon
         as no motion is detected by the algorithm, for a single frame. Which
         usually leads to a lot of very short and useless files that need to be
-        deleted manually later on. It basically acts as a buffer. (default: %(default)s)"""
+        deleted manually later on. It basically acts as a buffer. (default:
+        %(default)s)"""
         )
 ap.add_argument(
         "-d",
@@ -109,7 +110,8 @@ ap.add_argument(
         "--no-preview",
         type=bool,
         default=False,
-        help="""Prevents the live preview window from opening. (default: %(default)s)"""
+        help="""Prevents the live preview window from opening. (default:
+        %(default)s)"""
         )
 
 
