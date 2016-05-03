@@ -47,8 +47,22 @@ ap.add_argument(
         processing. Full-HD is impossible to do on the RPi. Don't even think
         about it!"""
         )
-ap.add_argument("-v", "--video", help="Path to the video file")
-ap.add_argument("-a", "--min-area", type=int, default=500, help="minimum area size")
+ap.add_argument(
+        "-v",
+        "--video",
+        help="""Path to the video file, which is to be processed instead of a live
+        video feed."""
+        )
+ap.add_argument(
+        "-a",
+        "--min-area",
+        type=int,
+        default=500,
+        help="""Minimum area size that is recognized as something in motion.
+        This is an absolute value and does *not* scale with the screen
+        resolution! If you change the resolution, bear in mind to change this
+        parameter accordingly."""
+        )
 ap.add_argument("-b", "--motion-buffer", type=int, default=30, help="Seconds to keep recording after no motion has been detected")
 args = vars(ap.parse_args())
 
