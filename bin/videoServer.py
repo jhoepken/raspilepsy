@@ -51,6 +51,14 @@ ap.add_argument(
         """
         )
 ap.add_argument(
+        "-f",
+        "--framerate",
+        type=int,
+        default=25,
+        help="""The framerate for the video capture and recording. Depending on
+        the camera and resolution, this can vary."""
+        )
+ap.add_argument(
         "-v",
         "--video",
         type=str,
@@ -85,6 +93,8 @@ ap.add_argument(
         default=False,
         help="""Prevents the live preview window from opening."""
         )
+
+
 args = vars(ap.parse_args())
 
 resolution = args["resolution"]
@@ -92,9 +102,10 @@ resolution = args["resolution"]
 lastMotion = int(datetime.datetime.now().strftime("%s"))
 
 def initPiCamera():
+    global args
     camera = PiCamera()
     camera.resolution = resolution
-    camera.framerate = 32
+    camera.framerate = args["framerate"]
     rawCapture = PiRGBArray(camera, size=resolution)
     
     time.sleep(0.1)
@@ -154,6 +165,7 @@ def annotateTime(frame):
     return frame
 
 def initVideoFile(resolution):
+    global args
     p = path.join(
                 "/media",
                 "jens",
@@ -165,7 +177,7 @@ def initVideoFile(resolution):
     print p
     writer = cv2.VideoWriter(p,
             cv2.cv.CV_FOURCC('M','J','P','G'),
-            30,
+            args["framerate"],
             resolution,
             True)
 
