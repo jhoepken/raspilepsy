@@ -1,10 +1,15 @@
 #!/usr/bin/python2.7
+"""
+Server application for raspilepsy that takes care of continuous video
+surveillance, seizure/motion detection and video recording.
+"""
 import datetime
 import imutils
 import time
 import argparse
 import cv2
 from os import path
+
 try:
     from picamera.array import PiRGBArray
     from picamera import PiCamera
@@ -18,7 +23,9 @@ def pair(s):
     except:
         raise argparse.ArgumentTypeError("Pair must be x,y")
 
-ap = argparse.ArgumentParser()
+ap = argparse.ArgumentParser(
+        description = __doc__
+        )
 ap.add_argument("-r", "--resolution", default="640,480", type=pair, help="Width and Height of video file. Default is 640 by 480 for real time analysis on RPi 3")
 ap.add_argument("-v", "--video", help="Path to the video file")
 ap.add_argument("-a", "--min-area", type=int, default=500, help="minimum area size")
@@ -28,7 +35,6 @@ args = vars(ap.parse_args())
 # resolution = (960, 540)
 # resolution = (1920, 1080)
 resolution = args["resolution"]
-print resolution
 
 lastMotion = int(datetime.datetime.now().strftime("%s"))
 
