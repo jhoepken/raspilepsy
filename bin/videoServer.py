@@ -53,6 +53,7 @@ ap.add_argument(
 ap.add_argument(
         "-v",
         "--video",
+        type=str,
         help="""Path to the video file, which is to be processed instead of a live
         video feed."""
         )
