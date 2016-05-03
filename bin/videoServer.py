@@ -107,13 +107,19 @@ ap.add_argument(
         )
 ap.add_argument(
         "-p",
-        "--no-preview",
-        type=bool,
-        default=False,
-        help="""Prevents the live preview window from opening. (default:
-        %(default)s)"""
+        "--preview",
+        dest='preview',
+        action='store_true',
+        help="""Opens the live preview window from opening."""
         )
-
+ap.add_argument(
+        "-n",
+        "--no-preview",
+        dest='preview',
+        action='store_false',
+        help="""Prevents the live preview window from opening."""
+        )
+ap.set_defaults(preview=True)
 
 args = vars(ap.parse_args())
 
@@ -258,7 +264,7 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
 
 
     # show the frame
-    if not args["no_preview"]:
+    if args["preview"]:
         cv2.imshow("Frame", image)
     key = cv2.waitKey(1) & 0xFF
 
