@@ -48,7 +48,8 @@ ap.add_argument(
         about it!
         Possible values are:
         960x540, 1280x720(SD), 1920x1080(HD)
-        """
+        
+        (default: %(default)s)"""
         )
 ap.add_argument(
         "-f",
@@ -56,14 +57,14 @@ ap.add_argument(
         type=int,
         default=25,
         help="""The framerate for the video capture and recording. Depending on
-        the camera and resolution, this can vary."""
+        the camera and resolution, this can vary. (default: %(default)s)"""
         )
 ap.add_argument(
         "-v",
         "--video",
         type=str,
         help="""Path to the video file, which is to be processed instead of a live
-        video feed."""
+        video feed. (default: %(default)s)"""
         )
 ap.add_argument(
         "-a",
@@ -73,7 +74,7 @@ ap.add_argument(
         help="""Minimum area size that is recognized as something in motion.
         This is an absolute value and does *not* scale with the screen
         resolution! If you change the resolution, bear in mind to change this
-        parameter accordingly."""
+        parameter accordingly. (default: %(default)s)"""
         )
 ap.add_argument(
         "-b",
@@ -84,7 +85,7 @@ ap.add_argument(
         This option is used to prevent the video recording from stopping as soon
         as no motion is detected by the algorithm, for a single frame. Which
         usually leads to a lot of very short and useless files that need to be
-        deleted manually later on. It basically acts as a buffer."""
+        deleted manually later on. It basically acts as a buffer. (default: %(default)s)"""
         )
 ap.add_argument(
         "-d",
@@ -95,14 +96,14 @@ ap.add_argument(
         the averaged frame for a given pixel to be triggered as regarded as
         motion. Smaller threshold values lead to more motion to be detected,
         larger threshold values to less and hence to a stiffer system and a
-        longer reaction time."""
+        longer reaction time. (default: %(default)s)"""
         )
 ap.add_argument(
         "-p",
         "--no-preview",
         type=bool,
         default=False,
-        help="""Prevents the live preview window from opening."""
+        help="""Prevents the live preview window from opening. (default: %(default)s)"""
         )
 
 
