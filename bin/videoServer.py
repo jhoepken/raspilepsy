@@ -184,7 +184,7 @@ def initVideoFile(resolution):
                 "windowsBackup",
                 "raspilepsy",
                 "footage_%s.avi"
-                %(str(datetime.datetime.now().strftime("%Y-%M-%d_%H:%M:%S")))
+                %(str(datetime.datetime.now().strftime("%Y-%M-%d_%H-%M-%S")))
                 )
     print p
     writer = cv2.VideoWriter(p,
