@@ -205,7 +205,7 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
 
 
     # show the frame
-    if args["no_preview"]:
+    if not args["no_preview"]:
         cv2.imshow("Frame", image)
     key = cv2.waitKey(1) & 0xFF
 
