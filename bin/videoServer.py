@@ -11,9 +11,25 @@ try:
 except ImportError:
     pass
 
+def pair(s):
+    try:
+        x,y = [int(sI) for sI in s.split(',')]
+        return x,y
+    except:
+        raise argparse.ArgumentTypeError("Pair must be x,y")
+
+ap = argparse.ArgumentParser()
+ap.add_argument("-r", "--resolution", default="640,480", type=pair, help="Width and Height of video file. Default is 640 by 480 for real time analysis on RPi 3")
+ap.add_argument("-v", "--video", help="Path to the video file")
+ap.add_argument("-a", "--min-area", type=int, default=500, help="minimum area size")
+ap.add_argument("-b", "--motion-buffer", type=int, default=30, help="Seconds to keep recording after no motion has been detected")
+args = vars(ap.parse_args())
+
 # resolution = (960, 540)
 # resolution = (1920, 1080)
-resolution = (1280, 720)
+resolution = args["resolution"]
+print resolution
+
 lastMotion = int(datetime.datetime.now().strftime("%s"))
 
 def initPiCamera():
@@ -96,20 +112,14 @@ def initVideoFile(resolution):
 
     return writer
 
-ap = argparse.ArgumentParser()
-ap.add_argument("-v", "--video", help="Path to the video file")
-ap.add_argument("-a", "--min-area", type=int, default=500, help="minimum area size")
-ap.add_argument("-b", "--motion-buffer", type=int, default=1, help="Minutes to keep recording after no motion has been detected")
-args = vars(ap.parse_args())
-
-# Read from live from camera
-if args.get("video", None) is None:
-    camera, rawCapture = initPiCamera()
-
 firstFrame = None
 
 hasMotion = False
 writer = None
+
+# Read from live from camera
+if args.get("video", None) is None:
+    camera, rawCapture = initPiCamera()
 
 
 # capture frames from the camera
