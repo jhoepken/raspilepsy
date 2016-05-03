@@ -4,10 +4,13 @@ import imutils
 import time
 import argparse
 import cv2
+from os import path
 from picamera.array import PiRGBArray
 from picamera import PiCamera
 
-resolution = (960, 540)
+# resolution = (960, 540)
+# resolution = (1920, 1080)
+resolution = (1280, 720)
 lastMotion = int(datetime.datetime.now().strftime("%s"))
 
 def initPiCamera():
@@ -59,7 +62,7 @@ def highlightMotion(frame, avg, lastMotion):
     cv2.putText(frame, "Status: {}".format(text), (10, 20),
     cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
 
-    if int(datetime.datetime.now().strftime("%s")) - lastMotion > args["motion_buffer"]:
+    if int(datetime.datetime.now().strftime("%s")) - lastMotion > 5.0:
         hasMotion = False
     else:
         hasMotion = True
@@ -71,6 +74,23 @@ def annotateTime(frame):
     (10, frame.shape[0] - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (0, 0, 255), 1)
     return frame
 
+def initVideoFile(resolution):
+    p = path.join(
+                "/media",
+                "jens",
+                "windowsBackup",
+                "raspilepsy",
+                "footage_%s.avi"
+                %(str(datetime.datetime.now().strftime("%Y-%M-%d_%H:%M:%S")))
+                )
+    print p
+    writer = cv2.VideoWriter(p,
+            cv2.cv.CV_FOURCC('M','J','P','G'),
+            30,
+            resolution,
+            True)
+
+    return writer
 
 ap = argparse.ArgumentParser()
 ap.add_argument("-v", "--video", help="Path to the video file")
@@ -82,25 +102,51 @@ args = vars(ap.parse_args())
 if args.get("video", None) is None:
     camera, rawCapture = initPiCamera()
 
-# cv2.VideoWriter(['testvideo', cv2.CV_FOURCC('M','J','P','G'), 25, 
-               # (640,480),True])
-
 firstFrame = None
+
+hasMotion = False
+writer = None
+
 
 # capture frames from the camera
 for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
+
     image = frame.array
 
     (image, firstFrame, hasMotion, lastMotion) = highlightMotion(image, firstFrame, lastMotion)
-
     image = annotateTime(image)
+    
+    try:
+        if hasMotion:
+            print "Writing image"
+            writer.write(image)
+        else:
+            print "-> No recording demanded. Writer released and set to None!"
+            writer.release()
+            writer = None
+    except:
+        if hasMotion:
+            print "Initialising new writer"
+            writer = initVideoFile(resolution)
+            writer.write(image)
+
+
     # show the frame
     cv2.imshow("Frame", image)
     key = cv2.waitKey(1) & 0xFF
 
     # clear the stream in preparation for the next frame
     rawCapture.truncate(0)
+    #cd $d
+    #make
+    #make install
+    #cd ..
+
 
     # if the `q` key was pressed, break from the loop
     if key == ord("q"):
+        try:
+            writer.release()
+        except:
+            pass
         break
