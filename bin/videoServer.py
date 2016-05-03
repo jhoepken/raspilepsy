@@ -10,6 +10,12 @@ import argparse
 import cv2
 from os import path
 
+__author__ = "Jens Hoepken"
+__email__ = "jens@sourceflux.de"
+__license__ = "GPL"
+__maintainer__ = "Jens Hoepken"
+__copyright__ = "Copyright 2016, sourceflux UG"
+
 try:
     from picamera.array import PiRGBArray
     from picamera import PiCamera
