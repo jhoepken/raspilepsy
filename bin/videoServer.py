@@ -5,8 +5,11 @@ import time
 import argparse
 import cv2
 from os import path
-from picamera.array import PiRGBArray
-from picamera import PiCamera
+try:
+    from picamera.array import PiRGBArray
+    from picamera import PiCamera
+except ImportError:
+    pass
 
 # resolution = (960, 540)
 # resolution = (1920, 1080)
