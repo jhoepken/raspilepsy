@@ -78,6 +78,13 @@ ap.add_argument(
         usually leads to a lot of very short and useless files that need to be
         deleted manually later on. It basically acts as a buffer."""
         )
+ap.add_argument(
+        "-p",
+        "--no-preview",
+        type=bool,
+        default=False,
+        help="""Prevents the live preview window from opening."""
+        )
 args = vars(ap.parse_args())
 
 resolution = args["resolution"]
@@ -198,7 +205,8 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
 
 
     # show the frame
-    cv2.imshow("Frame", image)
+    if args["no_preview"]:
+        cv2.imshow("Frame", image)
     key = cv2.waitKey(1) & 0xFF
 
     # clear the stream in preparation for the next frame
