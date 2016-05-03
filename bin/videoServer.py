@@ -69,8 +69,6 @@ ap.add_argument(
 ap.add_argument("-b", "--motion-buffer", type=int, default=30, help="Seconds to keep recording after no motion has been detected")
 args = vars(ap.parse_args())
 
-# resolution = (960, 540)
-# resolution = (1920, 1080)
 resolution = args["resolution"]
 
 lastMotion = int(datetime.datetime.now().strftime("%s"))
