@@ -27,6 +27,7 @@ def initPiCamera():
     return (camera, rawCapture)
 
 def highlightMotion(frame, avg, lastMotion):
+    global args
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     gray = cv2.GaussianBlur(gray, (21, 21), 0)
 
@@ -42,7 +43,7 @@ def highlightMotion(frame, avg, lastMotion):
     cv2.accumulateWeighted(gray, avg, 0.5)
     frameDelta = cv2.absdiff(gray, cv2.convertScaleAbs(avg))
 
-    thresh = cv2.threshold(frameDelta, 10, 255, cv2.THRESH_BINARY)[1]
+    thresh = cv2.threshold(frameDelta, args["motion_buffer"], 255, cv2.THRESH_BINARY)[1]
 
     # dilate the thresholded image to fill in holes, then find contours
     # on thresholded image
