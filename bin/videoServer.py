@@ -30,7 +30,11 @@ def pair(s):
         raise argparse.ArgumentTypeError("Pair must be x,y")
 
 ap = argparse.ArgumentParser(
-        description = __doc__
+        description = __doc__,
+        epilog = """More information on how to run the server can be found on the
+        project wiki https://bitbucket.org/jhoepken/raspilepsy/wiki/Home. Feel
+        free to contribute in any way, either in testing, documentation,
+        developing, feature ideas, bug reporting."""
         )
 ap.add_argument("-r", "--resolution", default="640,480", type=pair, help="Width and Height of video file. Default is 640 by 480 for real time analysis on RPi 3")
 ap.add_argument("-v", "--video", help="Path to the video file")
