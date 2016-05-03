@@ -87,6 +87,17 @@ ap.add_argument(
         deleted manually later on. It basically acts as a buffer."""
         )
 ap.add_argument(
+        "-d",
+        "--delta_threshold",
+        type=int,
+        default=10,
+        help="""The minimum absolute difference between the current frame and
+        the averaged frame for a given pixel to be triggered as regarded as
+        motion. Smaller threshold values lead to more motion to be detected,
+        larger threshold values to less and hence to a stiffer system and a
+        longer reaction time."""
+        )
+ap.add_argument(
         "-p",
         "--no-preview",
         type=bool,
@@ -129,7 +140,7 @@ def highlightMotion(frame, avg, lastMotion):
     cv2.accumulateWeighted(gray, avg, 0.5)
     frameDelta = cv2.absdiff(gray, cv2.convertScaleAbs(avg))
 
-    thresh = cv2.threshold(frameDelta, args["motion_buffer"], 255, cv2.THRESH_BINARY)[1]
+    thresh = cv2.threshold(frameDelta, args["delta_threshold"], 255, cv2.THRESH_BINARY)[1]
 
     # dilate the thresholded image to fill in holes, then find contours
     # on thresholded image
@@ -152,7 +163,7 @@ def highlightMotion(frame, avg, lastMotion):
     cv2.putText(frame, "Status: {}".format(text), (10, 20),
     cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
 
-    if int(datetime.datetime.now().strftime("%s")) - lastMotion > 5.0:
+    if int(datetime.datetime.now().strftime("%s")) - lastMotion > args["motion_buffer"]:
         hasMotion = False
     else:
         hasMotion = True
