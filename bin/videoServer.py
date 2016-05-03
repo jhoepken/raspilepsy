@@ -237,12 +237,14 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
 
     image = frame.array
 
+    # TODO: Multiprocessing run this function on a different core
     (image, firstFrame, hasMotion, lastMotion) = highlightMotion(image, firstFrame, lastMotion)
     image = annotateTime(image)
     
     try:
         if hasMotion:
             logging.info("Writing image to video file")
+            # TODO: Multiprocessing write in parallel
             writer.write(image)
         else:
             logging.info("No recording demanded. Video file handler released.")
@@ -251,6 +253,7 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
     except:
         if hasMotion:
             writer = initVideoFile(resolution)
+            # TODO: Multiprocessing write in parallel
             writer.write(image)
 
 
