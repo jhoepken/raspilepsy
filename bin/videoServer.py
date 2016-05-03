@@ -20,7 +20,7 @@ __license__ = "GPL"
 __maintainer__ = "Jens Hoepken"
 __copyright__ = "Copyright 2016, sourceflux UG"
 
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.DEBUG)
 
 try:
     from picamera.array import PiRGBArray
@@ -127,12 +127,15 @@ logging.debug("User selected delta_threshold: %i", args["delta_threshold"])
 lastMotion = int(datetime.datetime.now().strftime("%s"))
 
 def initPiCamera():
+    logging.info("Initializing RPi Camera")
     global args
     camera = PiCamera()
     camera.resolution = resolution
     camera.framerate = args["framerate"]
+    logging.debug("Done setting RPi Camera resolution and framerate")
     rawCapture = PiRGBArray(camera, size=resolution)
     
+    logging.debug("Sleeping for a small fraction...")
     time.sleep(0.1)
 
     return (camera, rawCapture)
@@ -206,7 +209,7 @@ def initVideoFile(resolution):
                 "footage_%s.avi"
                 %(str(datetime.datetime.now().strftime("%Y-%M-%d_%H-%M-%S")))
                 )
-    print p
+    logging.info("Initializing video file at %s", p)
     writer = cv2.VideoWriter(p,
             cv2.cv.CV_FOURCC('M','J','P','G'),
             args["framerate"],
