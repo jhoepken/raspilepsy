@@ -45,7 +45,10 @@ ap.add_argument(
         time analysis on RPi 3. The higher the resolution gets, the more
         demanding the computational requirements get in terms on real time
         processing. Full-HD is impossible to do on the RPi. Don't even think
-        about it!"""
+        about it!
+        Possible values are:
+        960x540, 1280x720(SD), 1920x1080(HD)
+        """
         )
 ap.add_argument(
         "-v",
