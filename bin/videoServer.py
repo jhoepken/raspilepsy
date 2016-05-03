@@ -11,6 +11,7 @@ import imutils
 import time
 import argparse
 import cv2
+import logging
 from os import path
 
 __author__ = "Jens Hoepken"
@@ -19,11 +20,13 @@ __license__ = "GPL"
 __maintainer__ = "Jens Hoepken"
 __copyright__ = "Copyright 2016, sourceflux UG"
 
+logging.basicConfig(level=logging.DEBUG)
+
 try:
     from picamera.array import PiRGBArray
     from picamera import PiCamera
 except ImportError:
-    pass
+    logging.critical('Cannot find picamera and caught ImportError')
 
 def pair(s):
     try:
@@ -113,6 +116,11 @@ ap.add_argument(
 args = vars(ap.parse_args())
 
 resolution = args["resolution"]
+logging.debug("User selected resolution: %ix%i", resolution[0], resolution[1])
+logging.debug("User selected framerate: %i fps", args["framerate"])
+logging.debug("User selected min-area: %i ", args["min_area"])
+logging.debug("User selected motion-buffer: %i s", args["motion_buffer"])
+logging.debug("User selected delta_threshold: %i", args["delta_threshold"])
 
 lastMotion = int(datetime.datetime.now().strftime("%s"))
 
@@ -212,7 +220,11 @@ writer = None
 
 # Read from live from camera
 if args.get("video", None) is None:
-    camera, rawCapture = initPiCamera()
+    try:
+        camera, rawCapture = initPiCamera()
+    except NameError:
+        from sys import exit
+        exit()
 
 
 # capture frames from the camera
