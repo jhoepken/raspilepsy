@@ -242,15 +242,14 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
     
     try:
         if hasMotion:
-            print "Writing image"
+            logging.info("Writing image to video file")
             writer.write(image)
         else:
-            print "-> No recording demanded. Writer released and set to None!"
+            logging.info("No recording demanded. Video file handler released.")
             writer.release()
             writer = None
     except:
         if hasMotion:
-            print "Initialising new writer"
             writer = initVideoFile(resolution)
             writer.write(image)
 
