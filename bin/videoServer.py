@@ -8,6 +8,8 @@ should be run via a cronjob. The users will not interact with it.
 """
 import datetime
 import imutils
+from imutils.video.pivideostream import PiVideoStream
+from imutils.video import FPS
 import time
 import argparse
 import cv2
@@ -218,6 +220,7 @@ def initVideoFile(resolution):
     logging.info("Initializing video file at %s", p)
     writer = cv2.VideoWriter(p,
             cv2.cv.CV_FOURCC('M','J','P','G'),
+            #cv2.cv.CV_FOURCC('P','I','M','1'),
             args["framerate"],
             resolution,
             True)
@@ -230,21 +233,29 @@ hasMotion = False
 writer = None
 
 # Read from live from camera
-if args.get("video", None) is None:
-    try:
-        camera, rawCapture = initPiCamera()
-    except NameError:
-        from sys import exit
-        exit()
+# if args.get("video", None) is None:
+    # try:
+        # camera, rawCapture = initPiCamera()
+    # except NameError:
+        # from sys import exit
+        # exit()
 
 
+vs = PiVideoStream(resolution=resolution,framerate=args["framerate"]).start()
+time.sleep(2.0)
+fps = FPS().start()
 # capture frames from the camera
-for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
-
-    image = frame.array
+while True:
+# for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
+    frame = vs.read()
+    image = frame
 
     # TODO: Multiprocessing run this function on a different core
-    (image, firstFrame, hasMotion, lastMotion) = highlightMotion(image, firstFrame, lastMotion)
+    #(image, firstFrame, hasMotion, lastMotion) = highlightMotion(image, firstFrame, lastMotion)
+    firstFrame = image
+    hasMotion = True
+    lastMotion = int(datetime.datetime.now().strftime("%s"))
+
     image = annotateTime(image)
     
     try:
@@ -269,8 +280,9 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
     key = cv2.waitKey(1) & 0xFF
 
     # clear the stream in preparation for the next frame
-    rawCapture.truncate(0)
+    # rawCapture.truncate(0)
 
+    fps.update()
 
     # if the `q` key was pressed, break from the loop
     if key == ord("q"):
@@ -279,3 +291,4 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
         except:
             pass
         break
+vs.stop()
