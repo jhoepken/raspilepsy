@@ -165,6 +165,12 @@ def initPiCamera():
     return (camera, rawCapture)
 
 def highlightMotion(frame, avg, lastMotion):
+    """
+    The live frame is scaled down to a width of 400px, in order to reduce the
+    computational load on the RPi and comparable low CPU power platforms.
+    Otherwise most of the frames will be dropped and the video feed looks like
+    security feeds from the 1980s, which is rediculous.
+    """
     global args
 
     smallFrame = imutils.resize(frame, width=400)
