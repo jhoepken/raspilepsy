@@ -166,7 +166,9 @@ def initPiCamera():
 
 def highlightMotion(frame, avg, lastMotion):
     global args
-    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+
+    smallFrame = imutils.resize(frame, width=400)
+    gray = cv2.cvtColor(smallFrame, cv2.COLOR_BGR2GRAY)
     gray = cv2.GaussianBlur(gray, (21, 21), 0)
 
     text = "No Seizure"
@@ -182,7 +184,6 @@ def highlightMotion(frame, avg, lastMotion):
     frameDelta = cv2.absdiff(gray, cv2.convertScaleAbs(avg))
 
     thresh = cv2.threshold(frameDelta, args["delta_threshold"], 255, cv2.THRESH_BINARY)[1]
-
     # dilate the thresholded image to fill in holes, then find contours
     # on thresholded image
     thresh = cv2.dilate(thresh, None, iterations=2)
