@@ -240,6 +240,7 @@ def annotateTime(frame):
 
 def initVideoFile(resolution):
     global args
+    # TODO: Make this selectable via CLI
     p = path.join(
                 "/media",
                 "jens",
@@ -249,6 +250,8 @@ def initVideoFile(resolution):
                 %(str(datetime.datetime.now().strftime("%Y-%M-%d_%H-%M-%S")))
                 )
     logging.info("Initializing video file at %s", p)
+
+    # TODO: Select compression via CLI
     writer = cv2.VideoWriter(p,
             cv2.cv.CV_FOURCC('M','J','P','G'),
             #cv2.cv.CV_FOURCC('P','I','M','1'),
