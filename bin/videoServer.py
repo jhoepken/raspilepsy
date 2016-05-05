@@ -193,8 +193,11 @@ def highlightMotion(frame, avg, lastMotion):
     # dilate the thresholded image to fill in holes, then find contours
     # on thresholded image
     thresh = cv2.dilate(thresh, None, iterations=2)
-    (cnts, _) = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL,
-    cv2.CHAIN_APPROX_SIMPLE)
+    (cnts, _) = cv2.findContours(
+                        thresh.copy(),
+                        cv2.RETR_EXTERNAL,
+                        cv2.CHAIN_APPROX_SIMPLE
+                    )
 
     if args["noHighlight"]:
         motionAreas = [cI for cI in cnts if cv2.contourArea(cI) < args["min_area"]]
