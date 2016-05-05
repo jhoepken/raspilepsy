@@ -242,12 +242,12 @@ def initVideoFile(resolution):
     global args
     # TODO: Make this selectable via CLI
     p = path.join(
-                "/media",
+                "/home",
                 "jens",
-                "windowsBackup",
+                "Desktop",
                 "raspilepsy",
                 "footage_%s.avi"
-                %(str(datetime.datetime.now().strftime("%Y-%M-%d_%H-%M-%S")))
+                %(str(datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")))
                 )
     logging.info("Initializing video file at %s", p)
 
