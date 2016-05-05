@@ -251,10 +251,7 @@ while True:
     image = frame
 
     # TODO: Multiprocessing run this function on a different core
-    #(image, firstFrame, hasMotion, lastMotion) = highlightMotion(image, firstFrame, lastMotion)
-    firstFrame = image
-    hasMotion = True
-    lastMotion = int(datetime.datetime.now().strftime("%s"))
+    (image, firstFrame, hasMotion, lastMotion) = highlightMotion(image, firstFrame, lastMotion)
 
     image = annotateTime(image)
     
