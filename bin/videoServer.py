@@ -98,7 +98,7 @@ ap.add_argument(
         )
 ap.add_argument(
         "-d",
-        "--delta_threshold",
+        "--delta-threshold",
         type=int,
         default=10,
         help="""The minimum absolute difference between the current frame and
@@ -121,7 +121,23 @@ ap.add_argument(
         action='store_false',
         help="""Prevents the live preview window from opening."""
         )
-ap.set_defaults(preview=True)
+ap.add_argument(
+        "--no-highlight",
+        dest='noHighlight',
+        action='store_true',
+        help="""Prevents rectangles from been drawn around areas of motion. This
+        speeds up the entire code and cleans up the video feed as well."""
+        )
+ap.add_argument(
+        "--highlight",
+        dest='noHighlight',
+        action='store_false',
+        help="""Draws rectagles around areas that are detected as motion. This
+        slows down the entire code and maybe messes up the video feed. Although
+        it can be handy to be used in order to find the right parameter value
+        for 'min-area' and '--delta-threshold' as well."""
+        )
+ap.set_defaults(preview=True, noHighlight=True)
 
 args = vars(ap.parse_args())
 
@@ -150,7 +166,9 @@ def initPiCamera():
 
 def highlightMotion(frame, avg, lastMotion):
     global args
-    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+
+    smallFrame = imutils.resize(frame, width=400)
+    gray = cv2.cvtColor(smallFrame, cv2.COLOR_BGR2GRAY)
     gray = cv2.GaussianBlur(gray, (21, 21), 0)
 
     text = "No Seizure"
@@ -166,24 +184,31 @@ def highlightMotion(frame, avg, lastMotion):
     frameDelta = cv2.absdiff(gray, cv2.convertScaleAbs(avg))
 
     thresh = cv2.threshold(frameDelta, args["delta_threshold"], 255, cv2.THRESH_BINARY)[1]
-
     # dilate the thresholded image to fill in holes, then find contours
     # on thresholded image
     thresh = cv2.dilate(thresh, None, iterations=2)
     (cnts, _) = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL,
     cv2.CHAIN_APPROX_SIMPLE)
 
-    for c in cnts:
-        if cv2.contourArea(c) < args["min_area"]:
-            continue
+    if args["noHighlight"]:
+        motionAreas = [cI for cI in cnts if cv2.contourArea(cI) < args["min_area"]]
+        if len(motionAreas) == 0:
+            text = "No Seizure"
+        else:
+            text = "Seizure"
+            lastMotion = int(datetime.datetime.now().strftime("%s"))
+    else:
+        for c in cnts:
+            if cv2.contourArea(c) < args["min_area"]:
+                continue
 
-        # compute the bounding box for the contour, draw it on the frame,
-        # and update the text
-        (x, y, w, h) = cv2.boundingRect(c)
-        cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 1)
-        text = "Seizure"
+            # compute the bounding box for the contour, draw it on the frame,
+            # and update the text
+            (x, y, w, h) = cv2.boundingRect(c)
+            cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 1)
+            text = "Seizure"
 
-        lastMotion = int(datetime.datetime.now().strftime("%s"))
+            lastMotion = int(datetime.datetime.now().strftime("%s"))
 
     cv2.putText(frame, "Status: {}".format(text), (10, 20),
     cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
