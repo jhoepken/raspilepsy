@@ -164,6 +164,18 @@ def initPiCamera():
 
     return (camera, rawCapture)
 
+def annotateStatus(frame, status):
+    cv2.putText(
+                frame,
+                "Status: {}".format(status),
+                (10, 20),
+                cv2.FONT_HERSHEY_SIMPLEX,
+                0.5,
+                (0, 0, 255),
+                2
+            )
+    return frame
+
 def highlightMotion(frame, avg, lastMotion):
     """
     The live frame is scaled down to a width of 400px, in order to reduce the
@@ -219,8 +231,7 @@ def highlightMotion(frame, avg, lastMotion):
 
             lastMotion = int(datetime.datetime.now().strftime("%s"))
 
-    cv2.putText(frame, "Status: {}".format(text), (10, 20),
-    cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
+    annotateStatus(frame, text)
 
     if int(datetime.datetime.now().strftime("%s")) - lastMotion > args["motion_buffer"]:
         hasMotion = False
