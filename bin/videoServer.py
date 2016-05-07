@@ -150,7 +150,7 @@ ap.add_argument(
         action='store_false',
         help="""Write video files (Default)"""
         )
-ap.set_defaults(preview=True, noHighlight=True, dryRun= True)
+ap.set_defaults(preview=True, noHighlight=True, dryRun=False)
 
 args = vars(ap.parse_args())
 
@@ -325,20 +325,21 @@ while True:
 
     image = annotateTime(image)
     
-    try:
-        if hasMotion:
-            logging.info("Writing image to video file")
-            # TODO: Multiprocessing write in parallel
-            writer.write(image)
-        else:
-            logging.info("No recording demanded. Video file handler released.")
-            writer.release()
-            writer = None
-    except:
-        if hasMotion:
-            writer = initVideoFile(resolution)
-            # TODO: Multiprocessing write in parallel
-            writer.write(image)
+    if not args["dryRun"]:
+        try:
+            if hasMotion:
+                logging.info("Writing image to video file")
+                # TODO: Multiprocessing write in parallel
+                writer.write(image)
+            else:
+                logging.info("No recording demanded. Video file handler released.")
+                writer.release()
+                writer = None
+        except:
+            if hasMotion:
+                writer = initVideoFile(resolution)
+                # TODO: Multiprocessing write in parallel
+                writer.write(image)
 
 
     # show the frame
