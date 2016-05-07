@@ -241,6 +241,11 @@ def highlightMotion(frame, avg, lastMotion):
     return (frame, avg, hasMotion, lastMotion)
 
 def annotateTime(frame):
+    """
+    It is important that the frame is not assigned back to the input parameter,
+    if it used for motion detection. Otherwise the changing time label is
+    detected as motion as well.
+    """
     cv2.putText(
                 frame,
                 datetime.datetime.now().strftime("%A %d %B %Y %I:%M:%S%p"),
