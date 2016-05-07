@@ -112,7 +112,7 @@ ap.add_argument(
         "--preview",
         dest='preview',
         action='store_true',
-        help="""Opens the live preview window from opening."""
+        help="""Opens the live preview window from opening. (Default)"""
         )
 ap.add_argument(
         "-n",
@@ -126,7 +126,8 @@ ap.add_argument(
         dest='noHighlight',
         action='store_true',
         help="""Prevents rectangles from been drawn around areas of motion. This
-        speeds up the entire code and cleans up the video feed as well."""
+        speeds up the entire code and cleans up the video feed as well.
+        (Default)"""
         )
 ap.add_argument(
         "--highlight",
@@ -137,7 +138,19 @@ ap.add_argument(
         it can be handy to be used in order to find the right parameter value
         for 'min-area' and '--delta-threshold' as well."""
         )
-ap.set_defaults(preview=True, noHighlight=True)
+ap.add_argument(
+        "--dry-run",
+        dest='dryRun',
+        action='store_true',
+        help="""Don't write any video files to disk."""
+        )
+ap.add_argument(
+        "--wet-run",
+        dest='dryRun',
+        action='store_false',
+        help="""Write video files (Default)"""
+        )
+ap.set_defaults(preview=True, noHighlight=True, dryRun= True)
 
 args = vars(ap.parse_args())
 
