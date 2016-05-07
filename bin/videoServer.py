@@ -186,6 +186,11 @@ def initPiCamera():
     return (camera, rawCapture)
 
 def annotateStatus(frame, status):
+    """
+    It is important that the frame is not assigned back to the input parameter,
+    if it used for motion detection. Otherwise the changing text is detected as
+    motion as well.
+    """
     cv2.putText(
                 frame,
                 "Status: {}".format(status),
@@ -331,7 +336,7 @@ while True:
     # TODO: Multiprocessing run this function on a different core
     (image, firstFrame, hasMotion, lastMotion) = highlightMotion(image, firstFrame, lastMotion)
 
-    image = annotateTime(image)
+    annotateTime(image)
     
     if not args["dryRun"]:
         try:
