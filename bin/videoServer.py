@@ -272,8 +272,12 @@ def initVideoFile(resolution):
 
     # TODO: Select compression via CLI
     writer = cv2.VideoWriter(p,
-            cv2.cv.CV_FOURCC('M','J','P','G'),
-            #cv2.cv.CV_FOURCC('P','I','M','1'),
+            # cv2.cv.CV_FOURCC('M','J','P','G'),
+            # cv2.cv.CV_FOURCC('P','I','M','1'),
+            # cv2.cv.CV_FOURCC('X','2','6','4'),
+            # cv2.cv.CV_FOURCC('M','P','4','V'),
+            # XVID is UNCOMPRESSED!
+            cv2.cv.CV_FOURCC('X','V','I','D'),
             args["framerate"],
             resolution,
             True)
