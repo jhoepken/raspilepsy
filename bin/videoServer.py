@@ -150,7 +150,12 @@ ap.add_argument(
         action='store_false',
         help="""Write video files (Default)"""
         )
-ap.set_defaults(preview=True, noHighlight=True, dryRun=False)
+
+ap.set_defaults(
+        preview=True,
+        noHighlight=True,
+        dryRun=False
+        )
 
 args = vars(ap.parse_args())
 
