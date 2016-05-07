@@ -160,6 +160,9 @@ logging.debug("User selected framerate: %i fps", args["framerate"])
 logging.debug("User selected min-area: %i ", args["min_area"])
 logging.debug("User selected motion-buffer: %i s", args["motion_buffer"])
 logging.debug("User selected delta_threshold: %i", args["delta_threshold"])
+logging.debug("User selected dryRun: %r", args["dryRun"])
+logging.debug("User selected noHighlight: %r", args["noHighlight"])
+logging.debug("User selected preview: %r", args["preview"])
 
 lastMotion = int(datetime.datetime.now().strftime("%s"))
 
