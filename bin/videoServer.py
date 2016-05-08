@@ -215,6 +215,17 @@ def annotateStatus(frame, status):
             )
     return frame
 
+def relativeFrameArea(contourArea):
+    """
+    Calculates the relative contribution of `contourArea` in relation to the
+    entire frame.
+    """
+    global args
+    frameSize = args["resolution"][0]*args["resolution"][1]
+
+    return contourArea*100.0/frameSize
+
+
 def highlightMotion(frame, avg, lastMotion):
     """
     The live frame is scaled down to a width of 400px, in order to reduce the
