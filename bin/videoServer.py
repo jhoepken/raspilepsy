@@ -48,7 +48,7 @@ ap = argparse.ArgumentParser(
 ap.add_argument(
         "-r",
         "--resolution",
-        default="320,240",
+        default="640,480",
         type=pair,
         help="""Width and Height of video file. Default is 640 by 480 for real
         time analysis on RPi 3. The higher the resolution gets, the more
@@ -56,7 +56,7 @@ ap.add_argument(
         processing. Full-HD is impossible to do on the RPi. Don't even think
         about it!
         Possible values are:
-        480x360, 640x480, 960x540, 1280x720(SD), 1920x1080(HD)
+        320,240, 480x360, 640x480, 960x540, 1280x720(SD), 1920x1080(HD)
         
         (default: %(default)s)"""
         )
