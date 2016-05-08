@@ -151,11 +151,24 @@ ap.add_argument(
         action='store_false',
         help="""Write video files (Default)"""
         )
+ap.add_argument(
+        "--downsampling",
+        dest='downsampling',
+        action='store_true',
+        help="""Downsample video frames for realtime analysis"""
+        )
+ap.add_argument(
+        "--no-downsampling",
+        dest='downsampling',
+        action='store_false',
+        help="""Don't downsample video frames fro realtime video analysis (Default)"""
+        )
 
 ap.set_defaults(
         preview=True,
         noHighlight=True,
-        dryRun=False
+        dryRun=False,
+        downsampling=False
         )
 
 args = vars(ap.parse_args())
@@ -237,8 +250,12 @@ def highlightMotion(frame, avg, lastMotion):
     """
     global args
 
-    smallFrame = imutils.resize(frame, width=300)
-    gray = cv2.cvtColor(smallFrame, cv2.COLOR_BGR2GRAY)
+    if args["downsampling"]:
+        smallFrame = imutils.resize(frame, width=300)
+        gray = cv2.cvtColor(smallFrame, cv2.COLOR_BGR2GRAY)
+    else:
+        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+
     gray = cv2.GaussianBlur(gray, (21, 21), 0)
 
     # if the average frame is None, initialize it
