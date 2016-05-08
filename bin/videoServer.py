@@ -79,7 +79,7 @@ ap.add_argument(
         "-a",
         "--min-area",
         type=float,
-        default=0.01,
+        default=0.1,
         help="""Minimum area size that is recognized as something in motion.
         This is an absolute value and does *not* scale with the screen
         resolution! If you change the resolution, bear in mind to change this
@@ -236,7 +236,7 @@ def relativeFrameArea(contourArea):
     """
     global args
     frameSize = args["resolution"][0]*args["resolution"][1]
-    relative = contourArea/frameSize
+    relative = contourArea/frameSize*100.0
 
     return relative
 
