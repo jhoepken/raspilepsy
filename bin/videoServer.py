@@ -64,9 +64,11 @@ ap.add_argument(
         "-f",
         "--framerate",
         type=int,
-        default=25,
+        default=10,
         help="""The framerate for the video capture and recording. Depending on
-        the camera and resolution, this can vary. (default: %(default)s)"""
+        the camera and resolution, this can vary. The lower the framerate, the
+        larger the resource buffers are for real time video analysis. (default:
+        %(default)s)"""
         )
 ap.add_argument(
         "-v",
