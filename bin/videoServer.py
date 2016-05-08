@@ -10,6 +10,7 @@ import datetime
 import imutils
 from imutils.video.pivideostream import PiVideoStream
 from imutils.video import FPS
+import numpy as np
 import time
 import argparse
 import cv2
@@ -77,8 +78,8 @@ ap.add_argument(
 ap.add_argument(
         "-a",
         "--min-area",
-        type=int,
-        default=500,
+        type=float,
+        default=0.01,
         help="""Minimum area size that is recognized as something in motion.
         This is an absolute value and does *not* scale with the screen
         resolution! If you change the resolution, bear in mind to change this
@@ -88,7 +89,7 @@ ap.add_argument(
         "-b",
         "--motion-buffer",
         type=int,
-        default=30,
+        default=2,
         help="""Seconds to keep recording after no motion has been detected.
         This option is used to prevent the video recording from stopping as soon
         as no motion is detected by the algorithm, for a single frame. Which
@@ -159,10 +160,23 @@ ap.set_defaults(
 
 args = vars(ap.parse_args())
 
+def checkInput():
+    global args
+
+    if args["min_area"] < 0.0 or args["min_area"] > 100.0:
+        logging.critical(
+        "User selected min-area is %i but must be between in ]0,100[" %(args["min_area"])
+        )
+        raise RuntimeError("min-area must be between 0 and 100")
+
+
 resolution = args["resolution"]
+
+checkInput()
+
 logging.debug("User selected resolution: %ix%i", resolution[0], resolution[1])
 logging.debug("User selected framerate: %i fps", args["framerate"])
-logging.debug("User selected min-area: %i ", args["min_area"])
+logging.debug("User selected min-area: %f ", args["min_area"])
 logging.debug("User selected motion-buffer: %i s", args["motion_buffer"])
 logging.debug("User selected delta_threshold: %i", args["delta_threshold"])
 logging.debug("User selected dryRun: %r", args["dryRun"])
@@ -202,6 +216,18 @@ def annotateStatus(frame, status):
             )
     return frame
 
+def relativeFrameArea(contourArea):
+    """
+    Calculates the relative contribution of `contourArea` in relation to the
+    entire frame.
+    """
+    global args
+    frameSize = args["resolution"][0]*args["resolution"][1]
+    relative = contourArea/frameSize
+
+    return relative
+
+
 def highlightMotion(frame, avg, lastMotion):
     """
     The live frame is scaled down to a width of 400px, in order to reduce the
@@ -215,8 +241,6 @@ def highlightMotion(frame, avg, lastMotion):
     gray = cv2.cvtColor(smallFrame, cv2.COLOR_BGR2GRAY)
     gray = cv2.GaussianBlur(gray, (21, 21), 0)
 
-    text = "No Seizure"
-    
     # if the average frame is None, initialize it
     if avg is None:
         avg = gray.copy().astype("float")
@@ -237,27 +261,41 @@ def highlightMotion(frame, avg, lastMotion):
                         cv2.CHAIN_APPROX_SIMPLE
                     )
 
+    motionAreas = np.array(
+            [relativeFrameArea(cv2.contourArea(cI)) for cI in cnts if relativeFrameArea(cv2.contourArea(cI)) < args["min_area"]]
+            )
+
     if args["noHighlight"]:
-        motionAreas = [cI for cI in cnts if cv2.contourArea(cI) < args["min_area"]]
+        try:
+            logging.debug("Maximum motion area %f", np.max(motionAreas))
+            logging.debug("Minimum motion area %f", np.min(motionAreas))
+        except ValueError:
+            pass
+
         if len(motionAreas) == 0:
             text = "No Seizure"
         else:
             text = "Seizure"
             lastMotion = int(datetime.datetime.now().strftime("%s"))
     else:
+        try:
+            logging.debug("Maximum motion area %f", np.max(motionAreas))
+            logging.debug("Minimum motion area %f", np.min(motionAreas))
+
+        except ValueError:
+            pass
+
         for c in cnts:
-            if cv2.contourArea(c) < args["min_area"]:
+            if relativeFrameArea(cv2.contourArea(c)) < args["min_area"]:
                 continue
 
             # compute the bounding box for the contour, draw it on the frame,
             # and update the text
             (x, y, w, h) = cv2.boundingRect(c)
-            cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 1)
+            cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
             text = "Seizure"
 
             lastMotion = int(datetime.datetime.now().strftime("%s"))
-
-    annotateStatus(frame, text)
 
     if int(datetime.datetime.now().strftime("%s")) - lastMotion > args["motion_buffer"]:
         hasMotion = False
