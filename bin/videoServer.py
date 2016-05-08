@@ -89,7 +89,7 @@ ap.add_argument(
         "-b",
         "--motion-buffer",
         type=int,
-        default=30,
+        default=2,
         help="""Seconds to keep recording after no motion has been detected.
         This option is used to prevent the video recording from stopping as soon
         as no motion is detected by the algorithm, for a single frame. Which
@@ -241,8 +241,6 @@ def highlightMotion(frame, avg, lastMotion):
     gray = cv2.cvtColor(smallFrame, cv2.COLOR_BGR2GRAY)
     gray = cv2.GaussianBlur(gray, (21, 21), 0)
 
-    text = "No Seizure"
-    
     # if the average frame is None, initialize it
     if avg is None:
         avg = gray.copy().astype("float")
@@ -294,12 +292,10 @@ def highlightMotion(frame, avg, lastMotion):
             # compute the bounding box for the contour, draw it on the frame,
             # and update the text
             (x, y, w, h) = cv2.boundingRect(c)
-            cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 1)
+            cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
             text = "Seizure"
 
             lastMotion = int(datetime.datetime.now().strftime("%s"))
-
-    annotateStatus(frame, text)
 
     if int(datetime.datetime.now().strftime("%s")) - lastMotion > args["motion_buffer"]:
         hasMotion = False
