@@ -388,6 +388,16 @@ while True:
     frame = vs.read()
     image = frame
 
+    # MODE 1
+    # TODO: Continuously check for motion. If motion occurrs, disable checking
+    # and record video file for n-seconds or until the user button is pressed.
+    # Reactivate the motion checking again.
+
+    # MODE 2
+    # TODO: Continuously write the relative frame in motion over time to file,
+    # for later analysis.
+
+    # MODE 3
     # TODO: Multiprocessing run this function on a different core
     (image, firstFrame, hasMotion, lastMotion) = highlightMotion(image, firstFrame, lastMotion)
 
