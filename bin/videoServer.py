@@ -159,7 +159,20 @@ ap.set_defaults(
 
 args = vars(ap.parse_args())
 
+def checkInput():
+    global args
+
+    if args["min_area"] < 0.0 or args["min_area"] > 100.0:
+        logging.critical(
+        "User selected min-area is %i but must be between in ]0,100[" %(args["min_area"])
+        )
+        raise RuntimeError("min-area must be between 0 and 100")
+
+
 resolution = args["resolution"]
+
+checkInput()
+
 logging.debug("User selected resolution: %ix%i", resolution[0], resolution[1])
 logging.debug("User selected framerate: %i fps", args["framerate"])
 logging.debug("User selected min-area: %i ", args["min_area"])
