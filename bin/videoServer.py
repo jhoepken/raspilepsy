@@ -262,7 +262,8 @@ def highlightMotion(frame, avg, lastMotion):
                     )
 
     if args["noHighlight"]:
-        motionAreas = [cI for cI in cnts if cv2.contourArea(cI) < args["min_area"]]
+        motionAreas = [cI for cI in cnts if relativeFrameArea(cv2.contourArea(cI)) < args["min_area"]]
+        print motionAreas
         if len(motionAreas) == 0:
             text = "No Seizure"
         else:
