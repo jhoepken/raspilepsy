@@ -25,18 +25,19 @@
                 <div class="panel-body">
                     <img src="/monitor/statistics/seizureFrequency.png"></br>
 
-                    {% if seizures %}
+                    {% if days|length > 0 %}
                       <!-- Table -->
                       <table class="table">
                           <tr>
                               <th>Day</th>
                               <th>`\bar{d}`</th>
                               <th>`\max{d}`</th>
-                              <th>`\min{d}`</th>
+                              <th>`\min{d}` {{ blubb }}</th>
                           </tr>
-                        {% for day in days %}
+                          
+                        {% for dayI in days %}
                           <tr>
-                              <td>{{ day.time|date:"d-m-Y" }}</td>
+                              <td>{{ dayI.time|date:"d-m-Y" }}</td>
                               <td>{{ durationMean.forloop.counter0 }}</td>
                               <td></td>
                               <td></td>
@@ -48,7 +49,13 @@
                 </div>
                 <div class="panel-footer">
                     The length `l` of the error bar is normalised by the maximal
-                    seizure duration `d_\text{max}` and suffices: `l \in [0; 1]`.
+                    seizure duration `d_\text{max}` and suffices: `l \in [0;
+                    1]`. The intensity is not accounted for in this diagram,
+                    since this is a <em>subjective</em> measure, yet. As soon as
+                    sound is recorded, it can be based on that. An other
+                    thinkable option is to use the live video analysis and
+                    determine the maximum frame-in-motion as a function over
+                    time.
                 </div>
             </div>
         </div>
