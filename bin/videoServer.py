@@ -256,6 +256,8 @@ def relativeFrameArea(contourArea):
 
     return relative
 
+def insertPossibleSeizure(videoFileTarget):
+    logging.info("Inserting possible seizure into database")
 
 def highlightMotion(frame, avg, lastMotion):
     """
@@ -379,7 +381,7 @@ def initVideoFile(resolution):
             resolution,
             True)
 
-    return writer
+    return (writer, p)
 
 firstFrame = None
 
@@ -398,6 +400,8 @@ writer = None
 vs = PiVideoStream(resolution=resolution,framerate=args["framerate"]).start()
 time.sleep(2.0)
 fps = FPS().start()
+videoFileTarget = None
+
 # capture frames from the camera
 while True:
 # for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
@@ -427,11 +431,14 @@ while True:
                 writer.write(image)
             else:
                 logging.info("No recording demanded. Video file handler released.")
+
+                if args["videoTrigger"]:
+                    insertPossibleSeizure(videoFileTarget)
                 writer.release()
                 writer = None
         except:
             if hasMotion:
-                writer = initVideoFile(resolution)
+                (writer, videoFileTarget) = initVideoFile(resolution)
                 # TODO: Multiprocessing write in parallel
                 writer.write(image)
 
