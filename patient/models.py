@@ -58,10 +58,10 @@ class Seizure(models.Model):
         return self.description
 
 
-class RawVideoCapture(models.Model):
+class PossibleSeizureCapture(models.Model):
 
     startTime = models.DateTimeField('start time', auto_now_add=True)
     endTime = models.DateTimeField('end time', auto_now_add=False)
-    path = models.FileField(upload_to='footage/%Y/%m/%d')
+    footage = models.FileField(upload_to='footage/%Y/%m/%d')
 
 
