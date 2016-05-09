@@ -61,6 +61,7 @@ class Seizure(models.Model):
 class RawVideoCapture(models.Model):
 
     startTime = models.DateTimeField('start time', auto_now_add=True)
-    path = models.FileField(upload_to='footage/%Y/%m/%d/raw')
+    endTime = models.DateTimeField('end time', auto_now_add=False)
+    path = models.FileField(upload_to='footage/%Y/%m/%d')
 
 
