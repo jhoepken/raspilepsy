@@ -201,7 +201,260 @@ class Command(BaseCommand):
                 downsampling=False,
                 videoTrigger=True
                 )
+
+    def checkInput(self, *args, **options):
+        global Args
+        Args = args[1]
+
+        if Args["min_area"] < 0.0 or Args["min_area"] > 100.0:
+            logging.critical(
+            "User selected min-area is %i but must be between in ]0,100["
+            %(Args["min_area"])
+            )
+            raise RuntimeError("min-area must be between 0 and 100")
+
+        resolution = Args["resolution"]
+
+        logging.debug("User selected resolution: %ix%i", resolution[0], resolution[1])
+        logging.debug("User selected framerate: %i fps", Args["framerate"])
+        logging.debug("User selected min-area: %f ", Args["min_area"])
+        logging.debug("User selected motion-buffer: %i s", Args["motion_buffer"])
+        logging.debug("User selected delta_threshold: %i", Args["delta_threshold"])
+        logging.debug("User selected dryRun: %r", Args["dryRun"])
+        logging.debug("User selected noHighlight: %r", Args["noHighlight"])
+        logging.debug("User selected preview: %r", Args["preview"])
+        logging.debug("User selected videoTrigger: %r", Args["videoTrigger"])
+
+    def annotateStatus(self, frame, status):
+        """
+        It is important that the frame is not assigned back to the input parameter,
+        if it used for motion detection. Otherwise the changing text is detected as
+        motion as well.
+        """
+        cv2.putText(
+                    frame,
+                    "Status: {}".format(status),
+                    (10, 20),
+                    cv2.FONT_HERSHEY_SIMPLEX,
+                    0.5,
+                    (0, 0, 255),
+                    2
+                )
+        return frame
     
+    def relativeFrameArea(self, contourArea):
+        """
+        Calculates the relative contribution of `contourArea` in relation to the
+        entire frame.
+        """
+        global Args
+        frameSize = Args["resolution"][0]*Args["resolution"][1]
+        relative = contourArea/frameSize*100.0
+
+        return relative
+
+    def insertPossibleSeizure(self, videoFileTarget):
+        logging.info("Inserting possible seizure into database")
+
+    def highlightMotion(self, frame, avg, lastMotion):
+        """
+        The live frame is scaled down to a width of 400px, in order to reduce the
+        computational load on the RPi and comparable low CPU power platforms.
+        Otherwise most of the frames will be dropped and the video feed looks like
+        security feeds from the 1980s, which is rediculous.
+        """
+        global Args
+
+        if Args["downsampling"]:
+            smallFrame = imutils.resize(frame, width=300)
+            gray = cv2.cvtColor(smallFrame, cv2.COLOR_BGR2GRAY)
+        else:
+            gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+
+        gray = cv2.GaussianBlur(gray, (21, 21), 0)
+
+        # if the average frame is None, initialize it
+        if avg is None:
+            avg = gray.copy().astype("float")
+     
+        # accumulate the weighted average between the current frame and
+        # previous frames, then compute the difference between the current
+        # frame and running average
+        cv2.accumulateWeighted(gray, avg, 0.5)
+        frameDelta = cv2.absdiff(gray, cv2.convertScaleAbs(avg))
+
+        thresh = cv2.threshold(frameDelta, Args["delta_threshold"], 255, cv2.THRESH_BINARY)[1]
+        # dilate the thresholded image to fill in holes, then find contours
+        # on thresholded image
+        thresh = cv2.dilate(thresh, None, iterations=2)
+        (cnts, _) = cv2.findContours(
+                            thresh.copy(),
+                            cv2.RETR_EXTERNAL,
+                            cv2.CHAIN_APPROX_SIMPLE
+                        )
+
+        motionAreas = np.array(
+                [self.relativeFrameArea(cv2.contourArea(cI)) for cI in cnts if
+                    self.relativeFrameArea(cv2.contourArea(cI)) < Args["min_area"]]
+                )
+
+        if Args["noHighlight"]:
+            try:
+                logging.debug("Maximum motion area %f", np.max(motionAreas))
+                logging.debug("Minimum motion area %f", np.min(motionAreas))
+            except ValueError:
+                pass
+
+            if len(motionAreas) == 0:
+                text = "No Seizure"
+            else:
+                text = "Seizure"
+                lastMotion = int(datetime.datetime.now().strftime("%s"))
+        else:
+            try:
+                logging.debug("Maximum motion area %f", np.max(motionAreas))
+                logging.debug("Minimum motion area %f", np.min(motionAreas))
+
+            except ValueError:
+                pass
+
+            for c in cnts:
+                if self.relativeFrameArea(cv2.contourArea(c)) < Args["min_area"]:
+                    continue
+
+                # compute the bounding box for the contour, draw it on the frame,
+                # and update the text
+                (x, y, w, h) = cv2.boundingRect(c)
+                cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
+                text = "Seizure"
+
+                lastMotion = int(datetime.datetime.now().strftime("%s"))
+
+        if int(datetime.datetime.now().strftime("%s")) - lastMotion > Args["motion_buffer"]:
+            hasMotion = False
+        else:
+            hasMotion = True
+
+        return (frame, avg, hasMotion, lastMotion)
+
+    def annotateTime(self, frame):
+        """
+        It is important that the frame is not assigned back to the input parameter,
+        if it used for motion detection. Otherwise the changing time label is
+        detected as motion as well.
+        """
+        cv2.putText(
+                    frame,
+                    datetime.datetime.now().strftime("%A %d %B %Y %I:%M:%S%p"),
+                    (10, frame.shape[0] - 10),
+                    cv2.FONT_HERSHEY_SIMPLEX,
+                    0.35,
+                    (0, 0, 255),
+                    1
+                )
+        return frame
+
+    def initVideoFile(self, resolution):
+        global Args
+        # TODO: Make this selectable via CLI
+        p = path.join(
+                    "/home",
+                    "jens",
+                    "Desktop",
+                    "raspilepsy",
+                    "footage_%s.avi"
+                    %(str(datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")))
+                    )
+        logging.info("Initializing video file at %s", p)
+
+        # TODO: Select compression via CLI
+        writer = cv2.VideoWriter(p,
+                # cv2.cv.CV_FOURCC('M','J','P','G'),
+                # cv2.cv.CV_FOURCC('P','I','M','1'),
+                # cv2.cv.CV_FOURCC('X','2','6','4'),
+                # cv2.cv.CV_FOURCC('M','P','4','V'),
+                # XVID is UNCOMPRESSED!
+                cv2.cv.CV_FOURCC('X','V','I','D'),
+                Args["framerate"],
+                resolution,
+                True)
+
+        return (writer, p)
+
     def handle(self, *args, **options):
 
-        self.stdout.write("FOOBAR")
+        self.checkInput(args, options)
+
+        global Args
+
+        resolution = Args["resolution"]
+        lastMotion = int(datetime.datetime.now().strftime("%s"))
+
+        firstFrame = None
+
+        hasMotion = False
+        writer = None
+
+        vs = PiVideoStream(resolution=resolution,framerate=Args["framerate"]).start()
+        time.sleep(2.0)
+        fps = FPS().start()
+        videoFileTarget = None
+
+        # capture frames from the camera
+        while True:
+            frame = vs.read()
+            image = frame
+
+            # MODE 1
+            # TODO: Continuously check for motion. If motion occurrs, disable checking
+            # and record video file for n-seconds or until the user button is pressed.
+            # Reactivate the motion checking again.
+
+            # MODE 2
+            # TODO: Continuously write the relative frame in motion over time to file,
+            # for later analysis.
+
+            # MODE 3
+            # TODO: Multiprocessing run this function on a different core
+            (image, firstFrame, hasMotion, lastMotion) = self.highlightMotion(image, firstFrame, lastMotion)
+
+            self.annotateTime(image)
+            
+            if not Args["dryRun"]:
+                try:
+                    if hasMotion:
+                        logging.info("Writing image to video file")
+                        # TODO: Multiprocessing write in parallel
+                        writer.write(image)
+                    else:
+                        logging.info("No recording demanded. Video file handler released.")
+
+                        if Args["videoTrigger"]:
+                            self.insertPossibleSeizure(videoFileTarget)
+                        writer.release()
+                        writer = None
+                except:
+                    if hasMotion:
+                        (writer, videoFileTarget) = self.initVideoFile(resolution)
+                        # TODO: Multiprocessing write in parallel
+                        writer.write(image)
+
+
+            # show the frame
+            if Args["preview"]:
+                cv2.imshow("Frame", image)
+            key = cv2.waitKey(1) & 0xFF
+
+            # clear the stream in preparation for the next frame
+            # rawCapture.truncate(0)
+
+            fps.update()
+
+            # if the `q` key was pressed, break from the loop
+            if key == ord("q"):
+                try:
+                    writer.release()
+                except:
+                    pass
+                break
+        vs.stop()
