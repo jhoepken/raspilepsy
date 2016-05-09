@@ -10,6 +10,7 @@ import logging
 from os import path
 
 from django.core.management import BaseCommand
+from patient.models import PossibleSeizure
 
 logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.DEBUG)
 
@@ -254,7 +255,9 @@ class Command(BaseCommand):
         return relative
 
     def insertPossibleSeizure(self, videoFileTarget):
-        logging.info("Inserting possible seizure into database")
+        logging.debug("Inserting possible seizure into database")
+
+        # s = PossibleSeizure(start, end, videoFileTarget)
 
     def highlightMotion(self, frame, avg, lastMotion):
         """
@@ -421,7 +424,7 @@ class Command(BaseCommand):
             self.annotateTime(image)
             
             if not Args["dryRun"]:
-                try:
+                if writer != None:
                     if hasMotion:
                         logging.info("Writing image to video file")
                         # TODO: Multiprocessing write in parallel
@@ -430,12 +433,25 @@ class Command(BaseCommand):
                         logging.info("No recording demanded. Video file handler released.")
 
                         if Args["videoTrigger"]:
-                            self.insertPossibleSeizure(videoFileTarget)
+                            # self.insertPossibleSeizure(videoFileTarget)
+                            seizureInstance.footage = str(videoFileTarget)
+                            seizureInstance.stop()
+                            seizureInstance.save()
+
+                            logging.debug(seizureInstance.startTime)
+                            logging.debug(seizureInstance.endTime)
+                            logging.debug(seizureInstance.footage)
+
                         writer.release()
                         writer = None
-                except:
+                else:
                     if hasMotion:
                         (writer, videoFileTarget) = self.initVideoFile(resolution)
+
+                        if Args["videoTrigger"]:
+                            seizureInstance = PossibleSeizure()
+                            seizureInstance.start()
+
                         # TODO: Multiprocessing write in parallel
                         writer.write(image)
 

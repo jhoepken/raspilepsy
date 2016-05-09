@@ -2,11 +2,11 @@ from __future__ import unicode_literals
 
 from django.db import models
 
+import datetime, pytz
 # Create your models here.
 
 class SeizureManager(models.Manager):
     def getDaysWithSeizures(self):
-        import datetime, pytz
 
         pytz.timezone("Europe/Berlin")
 
@@ -60,8 +60,18 @@ class Seizure(models.Model):
 
 class PossibleSeizure(models.Model):
 
-    startTime = models.DateTimeField('start time', auto_now_add=True)
+    startTime = models.DateTimeField('start time', auto_now_add=False)
     endTime = models.DateTimeField('end time', auto_now_add=False)
-    footage = models.FileField(upload_to='footage/%Y/%m/%d')
+    footage = models.CharField(max_length=200)
 
+
+    def stop(self):
+
+        pytz.timezone("Europe/Berlin")
+        self.endTime = pytz.utc.localize(datetime.datetime.now())
+
+    def start(self):
+
+        pytz.timezone("Europe/Berlin")
+        self.startTime = pytz.utc.localize(datetime.datetime.now())
 
