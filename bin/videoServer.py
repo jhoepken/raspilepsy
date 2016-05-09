@@ -210,6 +210,7 @@ logging.debug("User selected delta_threshold: %i", args["delta_threshold"])
 logging.debug("User selected dryRun: %r", args["dryRun"])
 logging.debug("User selected noHighlight: %r", args["noHighlight"])
 logging.debug("User selected preview: %r", args["preview"])
+logging.debug("User selected videoTrigger: %r", args["videoTrigger"])
 
 lastMotion = int(datetime.datetime.now().strftime("%s"))
 
