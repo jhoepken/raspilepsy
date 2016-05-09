@@ -20,6 +20,10 @@ except ImportError:
     logging.critical('Cannot find picamera and caught ImportError')
 
 def pair(s):
+    """
+    Data format to provide easy access to "int,int" type of data, used to
+    pass video resolution to the script.
+    """
     try:
         x,y = [int(sI) for sI in s.split(',')]
         return x,y
