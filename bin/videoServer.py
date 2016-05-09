@@ -165,12 +165,25 @@ ap.add_argument(
         action='store_false',
         help="""Don't downsample video frames fro realtime video analysis (Default)"""
         )
+ap.add_argument(
+        "--video-trigger",
+        dest='videoTrigger',
+        action='store_true',
+        help="""Use video trigger to detect possible seizures (Default)."""
+        )
+ap.add_argument(
+        "--no-video-trigger",
+        dest='videoTrigger',
+        action='store_false',
+        help="""Don't Use video trigger to detect possible seizures."""
+        )
 
 ap.set_defaults(
         preview=True,
         noHighlight=True,
         dryRun=False,
-        downsampling=False
+        downsampling=False,
+        videoTrigger=True
         )
 
 args = vars(ap.parse_args())
