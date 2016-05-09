@@ -93,24 +93,47 @@ def seizureFrequency(request):
     from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
     from matplotlib.figure import Figure
     from matplotlib.dates import DateFormatter
+    from numpy import mean, array, max
 
     seizures = Seizure.objects.all()
 
     days = Seizure.objects.getDaysWithSeizures()
+
     seizureFrequency = [len(sI) for sI in Seizure.objects.getSeizuresPerNight()]
 
     time = [seizure.time for seizure in seizures]
-    # duration = [seizure.duration for seizure in seizures]
+    durationMean = []
+    for seizure in Seizure.objects.getSeizuresPerNight():
+        durationMean.append(mean([sI.duration for sI in seizure]))
 
+
+    durationMeanNorm = durationMean/max(durationMean)
+
+    error_config = {'ecolor': '0.3'}
     fig=Figure(facecolor="white",figsize=(12, 6))
     ax=fig.add_subplot(111)
     # ax.set_xlabel("Time")
     ax.set_ylabel("Seizures [-]")
     ax.grid(True)
-    ax.bar(days, seizureFrequency)
+    p = ax.bar(
+            days,
+            seizureFrequency,
+            yerr=durationMeanNorm,
+            error_kw=error_config
+            )
+
+    i = 0
+    for pI in p:
+        height = pI.get_height()
+        ax.text(pI.get_x() + pI.get_width()/2., height+durationMeanNorm[i],
+                    '%1.2fs' %durationMean[i],
+                    ha='center',            # vertical alignment
+                    va='bottom'             # horizontal alignment
+                    )
+        i += 1
     ax.xaxis_date()
     ax.xaxis.set_major_formatter(DateFormatter('%Y-%m-%d'))
-    # fig.autofmt_xdate()
+    fig.autofmt_xdate()
 
     canvas=FigureCanvas(fig)
 
