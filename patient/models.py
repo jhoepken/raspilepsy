@@ -58,7 +58,7 @@ class Seizure(models.Model):
         return self.description
 
 
-class PossibleSeizureCapture(models.Model):
+class PossibleSeizure(models.Model):
 
     startTime = models.DateTimeField('start time', auto_now_add=True)
     endTime = models.DateTimeField('end time', auto_now_add=False)
