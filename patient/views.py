@@ -5,11 +5,9 @@ from django.template import loader
 from os.path import join
 
 from .forms import QuickAddSeizure
-from patient.models import Seizure
+from patient.models import Seizure, PossibleSeizure
 
 import patient.video
-
-
 
 def index(request):
 
@@ -34,6 +32,19 @@ def index(request):
         context['form'] = form
 
     return render(request, 'index.html', context)
+
+def seizureNow(request):
+    """
+    Handles the request that is triggert by the user, if the button "Seizure
+    Now" on the Dashbord is pressed. Which in turn finds the current
+    `PossibleSeizure` and marks it as User selected. If there is none, the last
+    one is used.
+    """
+    if request.POST["action"] == "seizureNow":
+        print "Received user detected seizure"
+        # patient.video.running = True
+
+    return render(request, 'index.html', {})
 
 def camera(request):
     if request.POST["action"] == "cameraStart":
