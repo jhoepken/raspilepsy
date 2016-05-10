@@ -77,6 +77,11 @@ class PossibleSeizureManager(models.Manager):
                         )
         print falsePositives
 
+    def update(self):
+
+        for sI in self.all():
+            sI.duration = int((self.endTime - self.startTime).total_seconds())
+
 
 class PossibleSeizure(models.Model):
 
@@ -84,7 +89,7 @@ class PossibleSeizure(models.Model):
     endTime = models.DateTimeField('end time', auto_now_add=False)
     footage = models.CharField(max_length=200)
     hasManualTrigger = models.BooleanField(default=False)
-    duration = models.FloatField(default=-1)
+    duration = models.IntegerField(default=-1)
 
     objects = PossibleSeizureManager()
 
@@ -95,6 +100,7 @@ class PossibleSeizure(models.Model):
 
         pytz.timezone("Europe/Berlin")
         self.endTime = pytz.utc.localize(datetime.datetime.now())
+        self.duration = int((self.endTime - self.startTime).total_seconds())
 
     def start(self):
 
