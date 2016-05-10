@@ -61,7 +61,14 @@ class Seizure(models.Model):
 class PossibleSeizureManager(models.Manager):
 
     def clean(self):
-        pass
+        falsePositives = self.all().order_by('-id').filter(
+                hasManualTrigger=False
+                ).filter(
+                        footage__isnull=False
+                    ).exclude(
+                            footage__exact=''
+                        )
+        print falsePositives
 
 
 class PossibleSeizure(models.Model):
@@ -71,7 +78,7 @@ class PossibleSeizure(models.Model):
     footage = models.CharField(max_length=200)
     hasManualTrigger = models.BooleanField(default=False)
 
-    objects = SeizureManager()
+    objects = PossibleSeizureManager()
 
     def __str__(self):
         return "%s %r" %(self.footage, self.hasManualTrigger)
