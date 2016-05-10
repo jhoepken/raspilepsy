@@ -10,7 +10,7 @@ import logging
 from os import path
 
 from django.core.management import BaseCommand
-from patient.models import PossibleSeizure
+from patient.models import PossibleSeizureFootage
 
 logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.DEBUG)
 
@@ -264,10 +264,10 @@ class Command(BaseCommand):
 
         return relative
 
-    def insertPossibleSeizure(self, videoFileTarget):
+    def insertPossibleSeizureFootage(self, videoFileTarget):
         logging.debug("Inserting possible seizure into database")
 
-        # s = PossibleSeizure(start, end, videoFileTarget)
+        # s = PossibleSeizureFootage(start, end, videoFileTarget)
 
     def highlightMotion(self, frame, avg, lastMotion):
         """
@@ -443,7 +443,7 @@ class Command(BaseCommand):
                         logging.info("No recording demanded. Video file handler released.")
 
                         if Args["videoTrigger"]:
-                            # self.insertPossibleSeizure(videoFileTarget)
+                            # self.insertPossibleSeizureFootage(videoFileTarget)
                             seizureInstance.footage = str(videoFileTarget)
                             seizureInstance.save()
                             seizureInstance.stop(Args)
@@ -459,7 +459,7 @@ class Command(BaseCommand):
                         (writer, videoFileTarget) = self.initVideoFile(resolution)
 
                         if Args["videoTrigger"]:
-                            seizureInstance = PossibleSeizure()
+                            seizureInstance = PossibleSeizureFootage()
                             seizureInstance.start()
                             seizureInstance.save()
 

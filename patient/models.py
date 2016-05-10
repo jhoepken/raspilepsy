@@ -59,7 +59,7 @@ class Seizure(models.Model):
         return self.description
 
 
-class PossibleSeizureManager(models.Manager):
+class PossibleSeizureFootageManager(models.Manager):
 
     def clean(self):
         """
@@ -84,7 +84,7 @@ class PossibleSeizureManager(models.Manager):
             sI.save()
 
 
-class PossibleSeizure(models.Model):
+class PossibleSeizureFootage(models.Model):
 
     startTime = models.DateTimeField('start time', auto_now_add=False)
     endTime = models.DateTimeField('end time', auto_now_add=False)
@@ -93,7 +93,7 @@ class PossibleSeizure(models.Model):
     duration = models.IntegerField(default=-1)
     toBeDeleted = models.BooleanField(default=False)
 
-    objects = PossibleSeizureManager()
+    objects = PossibleSeizureFootageManager()
 
     def __str__(self):
         return "%s (%i s) %r" %(self.footage, self.duration, self.hasManualTrigger)
@@ -106,9 +106,9 @@ class PossibleSeizure(models.Model):
         hence ignored.
         """
         if self.pk is not None:
-            orig = PossibleSeizure.objects.get(pk=self.pk)
+            orig = PossibleSeizureFootage.objects.get(pk=self.pk)
             self.hasManualTrigger = (orig.hasManualTrigger or self.hasManualTrigger)
-        super(PossibleSeizure, self).save(*args, **kwargs)
+        super(PossibleSeizureFootage, self).save(*args, **kwargs)
 
     def stop(self, args):
         pytz.timezone("Europe/Berlin")

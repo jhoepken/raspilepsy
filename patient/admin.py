@@ -1,8 +1,8 @@
 from django.contrib import admin
 
-from .models import Seizure, PossibleSeizure
+from .models import Seizure, PossibleSeizureFootage
 
 admin.site.register(Seizure)
-admin.site.register(PossibleSeizure)
+admin.site.register(PossibleSeizureFootage)
 
 # Register your models here.

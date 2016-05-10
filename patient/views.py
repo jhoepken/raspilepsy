@@ -6,7 +6,7 @@ import logging
 from os.path import join
 
 from .forms import QuickAddSeizure
-from patient.models import Seizure, PossibleSeizure
+from patient.models import Seizure, PossibleSeizureFootage
 
 import patient.video
 
@@ -38,8 +38,8 @@ def seizureNow(request):
     """
     Handles the request that is triggert by the user, if the button "Seizure
     Now" on the Dashbord is pressed. Which in turn finds the current
-    `PossibleSeizure` and marks it as User selected. If there is none, the last
-    one is used.
+    `PossibleSeizureFootage` and marks it as User selected. If there is none,
+    the last one is used.
     """
     seizures = Seizure.objects.all()
     context = {'seizures': seizures}
@@ -48,7 +48,7 @@ def seizureNow(request):
     if request.POST["action"] == "seizureNow":
         
         try:
-            s = PossibleSeizure.objects.all().order_by('-id')[0]
+            s = PossibleSeizureFootage.objects.all().order_by('-id')[0]
             s.hasManualTrigger = True
             s.save()
         except IndexError:
