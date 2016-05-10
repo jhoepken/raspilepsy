@@ -75,7 +75,7 @@ class PossibleSeizureManager(models.Manager):
                         footage__isnull=False
                     ).exclude(
                             footage__exact=''
-                        )
+                        ).filter(toBeDeleted=True)
         print falsePositives
 
     def update(self):
@@ -89,7 +89,7 @@ class PossibleSeizure(models.Model):
     startTime = models.DateTimeField('start time', auto_now_add=False)
     endTime = models.DateTimeField('end time', auto_now_add=False)
     footage = models.CharField(max_length=200)
-    hasManualTrigger = models.BooleanField(default=False)
+    hasManualTrigger = models.BooleanField()
     duration = models.IntegerField(default=-1)
     toBeDeleted = models.BooleanField(default=False)
 
@@ -98,8 +98,13 @@ class PossibleSeizure(models.Model):
     def __str__(self):
         return "%s (%i s) %r" %(self.footage, self.duration, self.hasManualTrigger)
 
-    def stop(self, args):
+    def save(self, *args, **kwargs):
+        if self.pk is not None:
+            orig = PossibleSeizure.objects.get(pk=self.pk)
+            self.hasManualTrigger = (orig.hasManualTrigger or self.hasManualTrigger)
+        super(PossibleSeizure, self).save(*args, **kwargs)
 
+    def stop(self, args):
         pytz.timezone("Europe/Berlin")
         self.endTime = pytz.utc.localize(datetime.datetime.now())
         self.duration = int((self.endTime - self.startTime).total_seconds())
@@ -118,11 +123,11 @@ class PossibleSeizure(models.Model):
             self.toBeDeleted = True
             self.save()
 
-
-
     def start(self):
 
         pytz.timezone("Europe/Berlin")
+        self.hasManualTrigger = False
         self.startTime = pytz.utc.localize(datetime.datetime.now())
         self.endTime = pytz.utc.localize(datetime.datetime.now())
+        self.save()
 
