@@ -99,6 +99,12 @@ class PossibleSeizure(models.Model):
         return "%s (%i s) %r" %(self.footage, self.duration, self.hasManualTrigger)
 
     def save(self, *args, **kwargs):
+        """
+        Overloads the base-class save method, since the `hasManualTrigger` can
+        be changed from other sources in the database and needs to be read. This
+        change is accepted. Any other changes to data are *not accepted* and are
+        hence ignored.
+        """
         if self.pk is not None:
             orig = PossibleSeizure.objects.get(pk=self.pk)
             self.hasManualTrigger = (orig.hasManualTrigger or self.hasManualTrigger)
