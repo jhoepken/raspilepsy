@@ -16,8 +16,8 @@
 
                   <form action="/seizureNow" method="post">
                     {% csrf_token %}
-                    <button type="submit" class="btn btn-danger btn-lg" value="Submit">
-                        <span class="glyphicon glyphicon-flash" aria-hidden="true"></span> Seizure now
+                    <button name="action" class="btn btn-danger btn-lg" value="seizureNow">
+                        <span class="glyphicon glyphicon-play" aria-hidden="true"></span> Seizure Now
                     </button>
                 </form>
             </div>
