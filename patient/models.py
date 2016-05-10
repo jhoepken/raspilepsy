@@ -84,6 +84,7 @@ class PossibleSeizure(models.Model):
     endTime = models.DateTimeField('end time', auto_now_add=False)
     footage = models.CharField(max_length=200)
     hasManualTrigger = models.BooleanField(default=False)
+    duration = models.FloatField(default=-1)
 
     objects = PossibleSeizureManager()
 
