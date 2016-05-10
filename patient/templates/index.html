@@ -6,7 +6,24 @@
 
 <div class="container">
 <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-4">
+
+        <div class="panel panel-primary">
+            <div class=panel-heading>
+                <h3 class=panel-title>Quick Add Seizure</h3>
+            </div>
+            <div class=panel-body>
+
+                  <form action="/seizureNow" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger btn-lg" value="Submit">
+                        <span class="glyphicon glyphicon-flash" aria-hidden="true"></span> Seizure now
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
 
         <div class="panel panel-primary">
             <div class=panel-heading>
@@ -25,7 +42,7 @@
         </div>
     </div>
 
-    <div class="col-md-6">
+    <div class="col-md-4">
 
         <div class="panel panel-primary">
             <div class=panel-heading>
