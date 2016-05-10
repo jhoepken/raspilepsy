@@ -58,12 +58,20 @@ class Seizure(models.Model):
         return self.description
 
 
+class PossibleSeizureManager(models.Manager):
+
+    def clean(self):
+        pass
+
+
 class PossibleSeizure(models.Model):
 
     startTime = models.DateTimeField('start time', auto_now_add=False)
     endTime = models.DateTimeField('end time', auto_now_add=False)
     footage = models.CharField(max_length=200)
     hasManualTrigger = models.BooleanField(default=False)
+
+    objects = SeizureManager()
 
     def __str__(self):
         return "%s %r" %(self.footage, self.hasManualTrigger)
