@@ -122,6 +122,16 @@ class Command(BaseCommand):
                 """
                 )
         parser.add_argument(
+                "--min-length",
+                type=int,
+                default=10,
+                help="""
+                Minimum length of video footage in seconds that has to be
+                recorded. Anything below this threshold gets discarded
+                automatically as being noise. (default: %(default)s)
+                """
+                )
+        parser.add_argument(
                 "-p",
                 "--preview",
                 dest='preview',
@@ -436,8 +446,7 @@ class Command(BaseCommand):
                             # self.insertPossibleSeizure(videoFileTarget)
                             seizureInstance.footage = str(videoFileTarget)
                             seizureInstance.save()
-                            seizureInstance.stop()
-                            seizureInstance.save()
+                            seizureInstance.stop(Args)
 
                             logging.debug(seizureInstance.startTime)
                             logging.debug(seizureInstance.endTime)

@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 from django.db import models
 
 import datetime, pytz
+from os import remove
 # Create your models here.
 
 class SeizureManager(models.Manager):
@@ -78,9 +79,9 @@ class PossibleSeizureManager(models.Manager):
         print falsePositives
 
     def update(self):
-
         for sI in self.all():
-            sI.duration = int((self.endTime - self.startTime).total_seconds())
+            sI.duration = int((sI.endTime - sI.startTime).total_seconds())
+            sI.save()
 
 
 class PossibleSeizure(models.Model):
@@ -90,17 +91,34 @@ class PossibleSeizure(models.Model):
     footage = models.CharField(max_length=200)
     hasManualTrigger = models.BooleanField(default=False)
     duration = models.IntegerField(default=-1)
+    toBeDeleted = models.BooleanField(default=False)
 
     objects = PossibleSeizureManager()
 
     def __str__(self):
-        return "%s %r" %(self.footage, self.hasManualTrigger)
+        return "%s (%i s) %r" %(self.footage, self.duration, self.hasManualTrigger)
 
-    def stop(self):
+    def stop(self, args):
 
         pytz.timezone("Europe/Berlin")
         self.endTime = pytz.utc.localize(datetime.datetime.now())
         self.duration = int((self.endTime - self.startTime).total_seconds())
+        self.save()
+
+        if self.duration < args["min_length"]:
+            # The file can be remove immideatly. The database entry cannot be
+            # removed right away, though. Since we are in `self`, we cannot
+            # delete `self`. In order to work around that, we mark this data set
+            # as `toBeDeleted` in the database and handle the delete process in
+            # the manager.
+            try:
+                remove(self.footage)
+            except:
+                pass
+            self.toBeDeleted = True
+            self.save()
+
+
 
     def start(self):
 
