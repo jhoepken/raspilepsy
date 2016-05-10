@@ -61,6 +61,13 @@ class Seizure(models.Model):
 class PossibleSeizureManager(models.Manager):
 
     def clean(self):
+        """
+        Removes false positives from the database, which are
+
+        1. way too short in duration
+        2. (maybe) don't have a manual trigger. This one needs to be decided on
+            in the future.
+        """
         falsePositives = self.all().order_by('-id').filter(
                 hasManualTrigger=False
                 ).filter(
