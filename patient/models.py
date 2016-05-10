@@ -65,6 +65,8 @@ class PossibleSeizure(models.Model):
     footage = models.CharField(max_length=200)
     hasManualTrigger = models.BooleanField(default=False)
 
+    def __str__(self):
+        return "%s %r" %(self.footage, self.hasManualTrigger)
 
     def stop(self):
 
@@ -75,4 +77,5 @@ class PossibleSeizure(models.Model):
 
         pytz.timezone("Europe/Berlin")
         self.startTime = pytz.utc.localize(datetime.datetime.now())
+        self.endTime = pytz.utc.localize(datetime.datetime.now())
 

@@ -1,6 +1,7 @@
-from django.shortcuts import render
+from django.shortcuts import render, render_to_response
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
+import logging
 
 from os.path import join
 
@@ -40,11 +41,23 @@ def seizureNow(request):
     `PossibleSeizure` and marks it as User selected. If there is none, the last
     one is used.
     """
-    if request.POST["action"] == "seizureNow":
-        print "Received user detected seizure"
-        # patient.video.running = True
+    seizures = Seizure.objects.all()
+    context = {'seizures': seizures}
 
-    return render(request, 'index.html', {})
+
+    if request.POST["action"] == "seizureNow":
+        
+        try:
+            s = PossibleSeizure.objects.all().order_by('-id')[0]
+            s.hasManualTrigger = True
+            s.save()
+        except IndexError:
+            pass
+
+    form = QuickAddSeizure()
+    context['form'] = form
+
+    return render(request, 'index.html', context)
 
 def camera(request):
     if request.POST["action"] == "cameraStart":

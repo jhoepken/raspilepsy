@@ -435,6 +435,7 @@ class Command(BaseCommand):
                         if Args["videoTrigger"]:
                             # self.insertPossibleSeizure(videoFileTarget)
                             seizureInstance.footage = str(videoFileTarget)
+                            seizureInstance.save()
                             seizureInstance.stop()
                             seizureInstance.save()
 
@@ -451,6 +452,7 @@ class Command(BaseCommand):
                         if Args["videoTrigger"]:
                             seizureInstance = PossibleSeizure()
                             seizureInstance.start()
+                            seizureInstance.save()
 
                         # TODO: Multiprocessing write in parallel
                         writer.write(image)
