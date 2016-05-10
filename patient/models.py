@@ -63,6 +63,7 @@ class PossibleSeizure(models.Model):
     startTime = models.DateTimeField('start time', auto_now_add=False)
     endTime = models.DateTimeField('end time', auto_now_add=False)
     footage = models.CharField(max_length=200)
+    hasManualTrigger = models.BooleanField(default=False)
 
 
     def stop(self):
