@@ -41,9 +41,6 @@ def seizureNow(request):
     `PossibleSeizureFootage` and marks it as User selected. If there is none,
     the last one is used.
     """
-    seizures = Seizure.objects.all()
-    context = {'seizures': seizures}
-
 
     if request.POST["action"] == "seizureNow":
         
@@ -58,7 +55,10 @@ def seizureNow(request):
             s.seizure = newSeizure
             s.save()
         except IndexError:
-            pass
+            newSeizure.delete()
+
+    seizures = Seizure.objects.all()
+    context = {'seizures': seizures}
 
     form = QuickAddSeizure()
     context['form'] = form
@@ -79,7 +79,7 @@ def camera(request):
 
 def monitor(request):
 
-    seizures = Seizure.objects.all()
+    seizures = Seizure.objects.all().order_by('-time')
     context = {'seizures': seizures}
 
     return render(request, 'monitor.html', context)

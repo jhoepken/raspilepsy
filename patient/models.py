@@ -120,6 +120,11 @@ class PossibleSeizureFootage(models.Model):
         if self.pk is not None:
             orig = PossibleSeizureFootage.objects.get(pk=self.pk)
             self.hasManualTrigger = (orig.hasManualTrigger or self.hasManualTrigger)
+            try:
+                if orig.seizure.id > self.seizure.id:
+                    self.seizure = orig.seizure
+            except:
+                pass
         super(PossibleSeizureFootage, self).save(*args, **kwargs)
 
     def stop(self, args):
