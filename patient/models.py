@@ -85,6 +85,12 @@ class PossibleSeizureFootageManager(models.Manager):
 
 
 class PossibleSeizureFootage(models.Model):
+    """
+    Points to a single video footage file and serves the purpose of
+    encapsulating e.g. video footage of multiple sources for a single seizure
+    and correlating it to a seizure. It has hence a one-to-many relation to
+    `Seizure`.
+    """
 
     startTime = models.DateTimeField('start time', auto_now_add=False)
     endTime = models.DateTimeField('end time', auto_now_add=False)
@@ -92,6 +98,8 @@ class PossibleSeizureFootage(models.Model):
     hasManualTrigger = models.BooleanField()
     duration = models.IntegerField(default=-1)
     toBeDeleted = models.BooleanField(default=False)
+
+    # seizure = models.ForeignKey(Seizure, on_delete
 
     objects = PossibleSeizureFootageManager()
 
