@@ -1,15 +1,14 @@
-from django.shortcuts import render
+from django.shortcuts import render, render_to_response
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
+import logging
 
 from os.path import join
 
 from .forms import QuickAddSeizure
-from patient.models import Seizure
+from patient.models import Seizure, PossibleSeizureFootage
 
 import patient.video
-
-
 
 def index(request):
 
@@ -35,6 +34,37 @@ def index(request):
 
     return render(request, 'index.html', context)
 
+def seizureNow(request):
+    """
+    Handles the request that is triggert by the user, if the button "Seizure
+    Now" on the Dashbord is pressed. Which in turn finds the current
+    `PossibleSeizureFootage` and marks it as User selected. If there is none,
+    the last one is used.
+    """
+
+    if request.POST["action"] == "seizureNow":
+        
+        newSeizure = Seizure()
+        newSeizure.duration = 1
+        newSeizure.description = ''
+        newSeizure.save()
+
+        try:
+            s = PossibleSeizureFootage.objects.all().order_by('-id')[0]
+            s.hasManualTrigger = True
+            s.seizure = newSeizure
+            s.save()
+        except IndexError:
+            newSeizure.delete()
+
+    seizures = Seizure.objects.all()
+    context = {'seizures': seizures}
+
+    form = QuickAddSeizure()
+    context['form'] = form
+
+    return render(request, 'index.html', context)
+
 def camera(request):
     if request.POST["action"] == "cameraStart":
         print "STARTING CAMERA"
@@ -49,7 +79,7 @@ def camera(request):
 
 def monitor(request):
 
-    seizures = Seizure.objects.all()
+    seizures = Seizure.objects.all().order_by('-time')
     context = {'seizures': seizures}
 
     return render(request, 'monitor.html', context)
