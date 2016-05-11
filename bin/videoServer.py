@@ -165,12 +165,25 @@ ap.add_argument(
         action='store_false',
         help="""Don't downsample video frames fro realtime video analysis (Default)"""
         )
+ap.add_argument(
+        "--video-trigger",
+        dest='videoTrigger',
+        action='store_true',
+        help="""Use video trigger to detect possible seizures (Default)."""
+        )
+ap.add_argument(
+        "--no-video-trigger",
+        dest='videoTrigger',
+        action='store_false',
+        help="""Don't Use video trigger to detect possible seizures."""
+        )
 
 ap.set_defaults(
         preview=True,
         noHighlight=True,
         dryRun=False,
-        downsampling=False
+        downsampling=False,
+        videoTrigger=True
         )
 
 args = vars(ap.parse_args())
@@ -197,6 +210,7 @@ logging.debug("User selected delta_threshold: %i", args["delta_threshold"])
 logging.debug("User selected dryRun: %r", args["dryRun"])
 logging.debug("User selected noHighlight: %r", args["noHighlight"])
 logging.debug("User selected preview: %r", args["preview"])
+logging.debug("User selected videoTrigger: %r", args["videoTrigger"])
 
 lastMotion = int(datetime.datetime.now().strftime("%s"))
 
@@ -242,6 +256,8 @@ def relativeFrameArea(contourArea):
 
     return relative
 
+def insertPossibleSeizure(videoFileTarget):
+    logging.info("Inserting possible seizure into database")
 
 def highlightMotion(frame, avg, lastMotion):
     """
@@ -365,7 +381,7 @@ def initVideoFile(resolution):
             resolution,
             True)
 
-    return writer
+    return (writer, p)
 
 firstFrame = None
 
@@ -384,6 +400,8 @@ writer = None
 vs = PiVideoStream(resolution=resolution,framerate=args["framerate"]).start()
 time.sleep(2.0)
 fps = FPS().start()
+videoFileTarget = None
+
 # capture frames from the camera
 while True:
 # for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
@@ -413,11 +431,14 @@ while True:
                 writer.write(image)
             else:
                 logging.info("No recording demanded. Video file handler released.")
+
+                if args["videoTrigger"]:
+                    insertPossibleSeizure(videoFileTarget)
                 writer.release()
                 writer = None
         except:
             if hasMotion:
-                writer = initVideoFile(resolution)
+                (writer, videoFileTarget) = initVideoFile(resolution)
                 # TODO: Multiprocessing write in parallel
                 writer.write(image)
 
