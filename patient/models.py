@@ -99,7 +99,11 @@ class PossibleSeizureFootage(models.Model):
     duration = models.IntegerField(default=-1)
     toBeDeleted = models.BooleanField(default=False)
 
-    # seizure = models.ForeignKey(Seizure, on_delete
+    seizure = models.ForeignKey(
+                    Seizure,
+                    default=-1,
+                    on_delete=models.CASCADE
+                )
 
     objects = PossibleSeizureFootageManager()
 
