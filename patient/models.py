@@ -56,7 +56,7 @@ class Seizure(models.Model):
     objects = SeizureManager()
 
     def __str__(self):
-        return self.description
+        return "%is: %s" %(self.duration, self.description)
 
 
 class PossibleSeizureFootageManager(models.Manager):
