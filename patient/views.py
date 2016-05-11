@@ -47,9 +47,15 @@ def seizureNow(request):
 
     if request.POST["action"] == "seizureNow":
         
+        newSeizure = Seizure()
+        newSeizure.duration = 1
+        newSeizure.description = ''
+        newSeizure.save()
+
         try:
             s = PossibleSeizureFootage.objects.all().order_by('-id')[0]
             s.hasManualTrigger = True
+            s.seizure = newSeizure
             s.save()
         except IndexError:
             pass
