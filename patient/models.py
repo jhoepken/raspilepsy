@@ -113,7 +113,12 @@ class PossibleSeizureFootage(models.Model):
     objects = PossibleSeizureFootageManager()
 
     def __str__(self):
-        return "%s (%i s) %r" %(self.footage, self.duration, self.hasManualTrigger)
+        return "%s (%i s) %r %r" %(
+                self.footage,
+                self.duration,
+                self.hasManualTrigger,
+                self.toBeDeleted
+                )
 
     def save(self, *args, **kwargs):
         """
