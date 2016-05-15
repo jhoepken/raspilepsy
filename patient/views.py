@@ -100,7 +100,7 @@ def seizureDistribution(request):
     seizures = Seizure.objects.all()
     context = {'seizures': seizures}
 
-    time = [seizure.time for seizure in seizures]
+    time = sorted([seizure.time for seizure in seizures])
     duration = [seizure.duration for seizure in seizures]
 
     fig=Figure(facecolor="white",figsize=(12, 6))
