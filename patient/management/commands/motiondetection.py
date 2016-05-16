@@ -41,7 +41,7 @@ class Command(BaseCommand):
     aquisition and should be run via a cronjob. The users will not interact with
     it.
     """
-    
+
     def add_arguments(self, parser):
 
         # Positional arguments
@@ -60,7 +60,7 @@ class Command(BaseCommand):
                 about it!
                 Possible values are:
                 320,240, 480x360, 640x480, 960x540, 1280x720(SD), 1920x1080(HD)
-                
+
                 (default: %(default)s)"""
                 )
         parser.add_argument(
@@ -252,7 +252,7 @@ class Command(BaseCommand):
                     2
                 )
         return frame
-    
+
     def relativeFrameArea(self, contourArea):
         """
         Calculates the relative contribution of `contourArea` in relation to the
@@ -289,7 +289,7 @@ class Command(BaseCommand):
         # if the average frame is None, initialize it
         if avg is None:
             avg = gray.copy().astype("float")
-     
+
         # accumulate the weighted average between the current frame and
         # previous frames, then compute the difference between the current
         # frame and running average
@@ -394,6 +394,15 @@ class Command(BaseCommand):
 
         return (writer, p)
 
+    def cleanUp(self):
+        """
+        Performs cleaning up tasks at the end of a recording session. This
+        includes, getting rid of video possible seizures which are marked as
+        false positives.
+        """
+
+        PossibleSeizureFootage.objects.clean()
+
     def handle(self, *args, **options):
 
         self.checkInput(args, options)
@@ -432,7 +441,7 @@ class Command(BaseCommand):
             (image, firstFrame, hasMotion, lastMotion) = self.highlightMotion(image, firstFrame, lastMotion)
 
             self.annotateTime(image)
-            
+
             if not Args["dryRun"]:
                 if writer != None:
                     if hasMotion:
@@ -484,4 +493,5 @@ class Command(BaseCommand):
                 except:
                     pass
                 break
+        self.cleanUp()
         vs.stop()
