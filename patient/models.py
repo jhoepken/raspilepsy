@@ -63,20 +63,25 @@ class PossibleSeizureFootageManager(models.Manager):
 
     def clean(self):
         """
-        Removes false positives from the database, which are
-
-        1. way too short in duration
-        2. (maybe) don't have a manual trigger. This one needs to be decided on
-            in the future.
+        Removes false positives from the database, which have been marked as to
+        be deleted previously. This method solely does the cleaning up and *not*
+        the selection. If the footage file is still present, it is removed as
+        well.
         """
-        falsePositives = self.all().order_by('-id').filter(
-                hasManualTrigger=False
-                ).filter(
-                        footage__isnull=False
-                    ).exclude(
-                            footage__exact=''
-                        ).filter(toBeDeleted=True)
-        print falsePositives
+        for fPI in self.getFalsePositives():
+            try:
+                remove(fPI.footage)
+            except:
+                pass
+            fPI.delete()
+
+
+    def getFalsePositives(self):
+        """
+        Returns a list of `PossibleSeizureFootage` instances that have already
+        been marked as `toBeDeleted` and can be savely be deleted.
+        """
+        return self.all().order_by('-id').filter(toBeDeleted=True)
 
     def update(self):
         for sI in self.all():
@@ -108,7 +113,12 @@ class PossibleSeizureFootage(models.Model):
     objects = PossibleSeizureFootageManager()
 
     def __str__(self):
-        return "%s (%i s) %r" %(self.footage, self.duration, self.hasManualTrigger)
+        return "%s (%i s) %r %r" %(
+                self.footage,
+                self.duration,
+                self.hasManualTrigger,
+                self.toBeDeleted
+                )
 
     def save(self, *args, **kwargs):
         """
