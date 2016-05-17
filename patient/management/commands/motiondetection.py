@@ -367,6 +367,21 @@ class Command(BaseCommand):
                 )
         return frame
 
+    def annotateDuration(self, frame, lastMotion):
+
+        duration = int(datetime.datetime.now().strftime("%s")) - lastMotion
+        cv2.putText(
+                    frame,
+                    str(min(0,duration)),
+                    (10, 10),
+                    cv2.FONT_HERSHEY_SIMPLEX,
+                    0.5,
+                    (0, 0, 255),
+                    1
+                )
+
+        return frame
+
     def initVideoFile(self, resolution):
         global Args
         # TODO: Make this selectable via CLI
@@ -440,6 +455,7 @@ class Command(BaseCommand):
             # TODO: Multiprocessing run this function on a different core
             (image, firstFrame, hasMotion, lastMotion) = self.highlightMotion(image, firstFrame, lastMotion)
 
+            self.annotateDuration(image, lastMotion)
             self.annotateTime(image)
 
             if not Args["dryRun"]:
