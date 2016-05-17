@@ -372,7 +372,7 @@ class Command(BaseCommand):
         duration = int(datetime.datetime.now().strftime("%s")) - lastMotion
         cv2.putText(
                     frame,
-                    str(max(min(0,duration), duration)),
+                    str(duration),
                     (10, 10),
                     cv2.FONT_HERSHEY_SIMPLEX,
                     0.5,
