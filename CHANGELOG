@@ -1,0 +1,7 @@
+Release Notes - raspilepsy - Version 1.0
+
+** Task
+    * [RAS-2] - Detect seizures automatically
+    * [RAS-3] - Store possible seizures in extra model
+    * [RAS-4] - Clean up false positives
+    * [RAS-7] - Create a single button to insert a seizure
