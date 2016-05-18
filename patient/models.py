@@ -164,6 +164,15 @@ class PossibleSeizureFootage(models.Model):
         self.endTime = pytz.utc.localize(datetime.datetime.now())
         self.save()
 
+class Patient(models.Model):
+    """
+    Stores data of a patient. This is *unencrypted* for now, but the data is not
+    sensitive. It is solely personal information.
+    """
+    firstname = models.CharField(max_length=50)
+    surname = models.CharField(max_length=50)
+    weight = models.FloatField()
+    height = models.FloatField()
 
 class PatientMotion(models.Model):
     """
@@ -175,3 +184,9 @@ class PatientMotion(models.Model):
     lastMotionTime = models.DateTimeField('lastMotionTime', auto_now_add=False)
     isInMotionSince = models.DateTimeField('isInMotionSince', auto_now_add=False)
     isInMotion = models.BooleanField(default=False)
+
+    patient = models.ForeignKey(
+                    Patient,
+                    default=-1,
+                    on_delete=models.CASCADE
+                )
