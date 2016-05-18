@@ -193,3 +193,6 @@ class PatientMotion(models.Model):
                     default=-1,
                     on_delete=models.CASCADE
                 )
+
+    def __str__(self):
+        return "%s, %s" %(self.patient.surname, self.patient.firstname)
