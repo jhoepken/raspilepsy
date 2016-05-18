@@ -7,7 +7,7 @@ import time
 import argparse
 import cv2
 import logging
-from os import path
+from os import path, makedirs
 
 from django.core.management import BaseCommand
 from patient.models import PossibleSeizureFootage, Patient, PatientMotion
@@ -387,11 +387,17 @@ class Command(BaseCommand):
     def initVideoFile(self, resolution):
         global Args
         # TODO: Make this selectable via CLI
-        p = path.join(
+        newPath = path.join(
                     "/home",
                     "jens",
                     "Desktop",
                     "raspilepsy",
+                    str(datetime.datetime.now().strftime("%Y-%m-%d"))
+                    )
+        if not path.isdir(newPath):
+            makedirs(newPath)
+        p = path.join(
+                    newPath,
                     "footage_%s.avi"
                     %(str(datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")))
                     )
