@@ -361,7 +361,7 @@ class Command(BaseCommand):
                     datetime.datetime.now().strftime("%A %d %B %Y %I:%M:%S%p"),
                     (10, frame.shape[0] - 10),
                     cv2.FONT_HERSHEY_SIMPLEX,
-                    0.35,
+                    0.5,
                     (0, 0, 255),
                     1
                 )
@@ -374,10 +374,10 @@ class Command(BaseCommand):
 
         cv2.putText(
                     frame,
-                    str(duration),
-                    (10, 10),
+                    "%is" %(duration),
+                    (10, 20),
                     cv2.FONT_HERSHEY_SIMPLEX,
-                    0.5,
+                    0.75,
                     (0, 0, 255),
                     1
                 )
