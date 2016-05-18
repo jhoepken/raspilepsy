@@ -10,7 +10,7 @@ import logging
 from os import path
 
 from django.core.management import BaseCommand
-from patient.models import PossibleSeizureFootage
+from patient.models import PossibleSeizureFootage, PatientMotion
 
 logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.DEBUG)
 
@@ -367,9 +367,10 @@ class Command(BaseCommand):
                 )
         return frame
 
-    def annotateDuration(self, frame, lastMotion):
+    def annotateDuration(self, frame, motion):
 
-        duration = int(datetime.datetime.now().strftime("%s")) - lastMotion
+        duration = int(datetime.datetime.now().strftime("%s")) - motion.isInMotionSince
+
         cv2.putText(
                     frame,
                     str(duration),
@@ -418,11 +419,16 @@ class Command(BaseCommand):
 
         PossibleSeizureFootage.objects.clean()
 
+    def loadPatientData(self):
+        return PatientMotion.objects.all()[0]
+
     def handle(self, *args, **options):
 
         self.checkInput(args, options)
 
         global Args
+
+        patientMotion = self.loadPatientData()
 
         resolution = Args["resolution"]
         lastMotion = int(datetime.datetime.now().strftime("%s"))
@@ -455,7 +461,12 @@ class Command(BaseCommand):
             # TODO: Multiprocessing run this function on a different core
             (image, firstFrame, hasMotion, lastMotion) = self.highlightMotion(image, firstFrame, lastMotion)
 
-            self.annotateDuration(image, lastMotion)
+            if hasMotion:
+                patientMotion.moves()
+            else:
+                patientMotion.freezes()
+
+            self.annotateDuration(image, patientMotion)
             self.annotateTime(image)
 
             if not Args["dryRun"]:
