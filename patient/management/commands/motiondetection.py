@@ -420,7 +420,7 @@ class Command(BaseCommand):
         PossibleSeizureFootage.objects.clean()
 
     def loadPatientData(self):
-        return PatientMotion.objects.all()[0]
+        return PatientMotion.patient.objects.all()[0]
 
     def handle(self, *args, **options):
 
