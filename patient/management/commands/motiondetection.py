@@ -59,7 +59,7 @@ class Command(BaseCommand):
                 processing. Full-HD is impossible to do on the RPi. Don't even think
                 about it!
                 Possible values are:
-                320,240, 480x360, 640x480, 960x540, 1280x720(SD), 1920x1080(HD)
+                320x240, 480x360, 640x480, 960x540, 1280x720(SD), 1920x1080(HD)
 
                 (default: %(default)s)"""
                 )
