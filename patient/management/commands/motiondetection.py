@@ -1,4 +1,4 @@
-import datetime
+import datetime, pytz
 import imutils
 from imutils.video.pivideostream import PiVideoStream
 from imutils.video import FPS
@@ -10,7 +10,7 @@ import logging
 from os import path
 
 from django.core.management import BaseCommand
-from patient.models import PossibleSeizureFootage, PatientMotion
+from patient.models import PossibleSeizureFootage, Patient, PatientMotion
 
 logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.DEBUG)
 
@@ -369,7 +369,8 @@ class Command(BaseCommand):
 
     def annotateDuration(self, frame, motion):
 
-        duration = int(datetime.datetime.now().strftime("%s")) - motion.isInMotionSince
+        duration = int(pytz.utc.localize(datetime.datetime.now()).strftime("%s")) - \
+                    int(motion.isInMotionSince.strftime("%s"))
 
         cv2.putText(
                     frame,
@@ -420,7 +421,22 @@ class Command(BaseCommand):
         PossibleSeizureFootage.objects.clean()
 
     def loadPatientData(self):
-        return PatientMotion.patient.objects.all()[0]
+
+        logging.debug(Patient.objects.all())
+        logging.debug(PatientMotion.objects.all())
+        patientMotion = PatientMotion.objects.all().filter(patient__firstname__startswith="Jens")
+
+        if not patientMotion:
+            patientMotion = PatientMotion()
+            pytz.timezone("Europe/Berlin")
+            patientMotion.lastMotionTime = pytz.utc.localize(datetime.datetime.now())
+            patientMotion.isInMotionSince = pytz.utc.localize(datetime.datetime.now())
+            patientMotion.isInMotion = False
+            patientMotion.patient = Patient.objects.all().filter(firstname__startswith="Jens")[0]
+            patientMotion.save()
+
+        logging.debug(patientMotion)
+        return patientMotion[0]
 
     def handle(self, *args, **options):
 
@@ -431,7 +447,7 @@ class Command(BaseCommand):
         patientMotion = self.loadPatientData()
 
         resolution = Args["resolution"]
-        lastMotion = int(datetime.datetime.now().strftime("%s"))
+        lastMotion = int(pytz.utc.localize(datetime.datetime.now()).strftime("%s"))
 
         firstFrame = None
 

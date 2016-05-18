@@ -202,10 +202,11 @@ class PatientMotion(models.Model):
         This method needs to be called if motion of a patient is detected by any
         means.
         """
-        self.lastMotionTime = datetime.datetime.now()
+        pytz.timezone("Europe/Berlin")
+        self.lastMotionTime = pytz.utc.localize(datetime.datetime.now())
 
         if not self.isInMotion:
-            self.isInMotionSince = datetime.datetime.now()
+            self.isInMotionSince = pytz.utc.localize(datetime.datetime.now())
             self.isInMotion = True
 
         self.save()
