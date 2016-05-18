@@ -164,3 +164,14 @@ class PossibleSeizureFootage(models.Model):
         self.endTime = pytz.utc.localize(datetime.datetime.now())
         self.save()
 
+
+class PatientMotion(models.Model):
+    """
+    Stores the motion of a patient in the database, so that it can be updated
+    from various sources. Doing this simplifies various computations of time
+    calculations as well and encapulates time and motion data.
+    """
+
+    lastMotionTime = models.DateTimeField('lastMotionTime', auto_now_add=False)
+    isInMotionSince = models.DateTimeField('isInMotionSince', auto_now_add=False)
+    isInMotion = models.BooleanField(default=False)
