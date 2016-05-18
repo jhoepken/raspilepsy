@@ -196,3 +196,24 @@ class PatientMotion(models.Model):
 
     def __str__(self):
         return "%s, %s" %(self.patient.surname, self.patient.firstname)
+
+    def moves(self):
+        """
+        This method needs to be called if motion of a patient is detected by any
+        means.
+        """
+        self.lastMotionTime = datetime.datetime.now()
+
+        if not self.isInMotion:
+            self.isInMotionSince = datetime.datetime.now()
+            self.isInMotion = True
+
+        self.save()
+
+    def freezes(self):
+        """
+        This method needs to be called if the patient stops moving.
+        """
+        self.isInMotion = False
+        self.save()
+
