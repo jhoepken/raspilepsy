@@ -1,5 +1,8 @@
 from time import sleep
-from picamera import PiCamera
+try:
+    from picamera import PiCamera
+except ImportError:
+    pass
 
 running = False
 
@@ -15,15 +18,24 @@ class recorder:
     def __init__(self, target):
 
         self.target = target
-        self.camera = PiCamera()
+        try:
+            self.camera = PiCamera()
+        except:
+            self.camera = None
         self.audio = None
 
     def start(self):
         running = True
-        self.camera = PiCamera()
-        self.camera.start_recording(self.target)
+        try:
+            self.camera = PiCamera()
+            self.camera.start_recording(self.target)
+        except AttributeError:
+            pass
 
 
     def stop(self):
-        self.camera.stop_recording()
+        try:
+            self.camera.stop_recording()
+        except:
+            pass
 

@@ -1,4 +1,4 @@
-import datetime
+import datetime, pytz
 import imutils
 from imutils.video.pivideostream import PiVideoStream
 from imutils.video import FPS
@@ -10,7 +10,7 @@ import logging
 from os import path
 
 from django.core.management import BaseCommand
-from patient.models import PossibleSeizureFootage
+from patient.models import PossibleSeizureFootage, Patient, PatientMotion
 
 logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.DEBUG)
 
@@ -361,10 +361,27 @@ class Command(BaseCommand):
                     datetime.datetime.now().strftime("%A %d %B %Y %I:%M:%S%p"),
                     (10, frame.shape[0] - 10),
                     cv2.FONT_HERSHEY_SIMPLEX,
-                    0.35,
+                    0.5,
                     (0, 0, 255),
                     1
                 )
+        return frame
+
+    def annotateDuration(self, frame, motion):
+
+        duration = int(pytz.utc.localize(datetime.datetime.now()).strftime("%s")) - \
+                    int(motion.isInMotionSince.strftime("%s"))
+
+        cv2.putText(
+                    frame,
+                    "%is" %(duration),
+                    (10, 20),
+                    cv2.FONT_HERSHEY_SIMPLEX,
+                    0.75,
+                    (0, 0, 255),
+                    1
+                )
+
         return frame
 
     def initVideoFile(self, resolution):
@@ -403,14 +420,34 @@ class Command(BaseCommand):
 
         PossibleSeizureFootage.objects.clean()
 
+    def loadPatientData(self):
+
+        logging.debug(Patient.objects.all())
+        logging.debug(PatientMotion.objects.all())
+        patientMotion = PatientMotion.objects.all().filter(patient__firstname__startswith="Jens")
+
+        if not patientMotion:
+            patientMotion = PatientMotion()
+            pytz.timezone("Europe/Berlin")
+            patientMotion.lastMotionTime = pytz.utc.localize(datetime.datetime.now())
+            patientMotion.isInMotionSince = pytz.utc.localize(datetime.datetime.now())
+            patientMotion.isInMotion = False
+            patientMotion.patient = Patient.objects.all().filter(firstname__startswith="Jens")[0]
+            patientMotion.save()
+
+        logging.debug(patientMotion)
+        return patientMotion[0]
+
     def handle(self, *args, **options):
 
         self.checkInput(args, options)
 
         global Args
 
+        patientMotion = self.loadPatientData()
+
         resolution = Args["resolution"]
-        lastMotion = int(datetime.datetime.now().strftime("%s"))
+        lastMotion = int(pytz.utc.localize(datetime.datetime.now()).strftime("%s"))
 
         firstFrame = None
 
@@ -440,6 +477,12 @@ class Command(BaseCommand):
             # TODO: Multiprocessing run this function on a different core
             (image, firstFrame, hasMotion, lastMotion) = self.highlightMotion(image, firstFrame, lastMotion)
 
+            if hasMotion:
+                patientMotion.moves()
+            else:
+                patientMotion.freezes()
+
+            self.annotateDuration(image, patientMotion)
             self.annotateTime(image)
 
             if not Args["dryRun"]:

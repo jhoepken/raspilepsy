@@ -164,3 +164,57 @@ class PossibleSeizureFootage(models.Model):
         self.endTime = pytz.utc.localize(datetime.datetime.now())
         self.save()
 
+class Patient(models.Model):
+    """
+    Stores data of a patient. This is *unencrypted* for now, but the data is not
+    sensitive. It is solely personal information.
+    """
+    firstname = models.CharField(max_length=50)
+    surname = models.CharField(max_length=50)
+    weight = models.FloatField()
+    height = models.FloatField()
+
+    def __str__(self):
+        return "%s, %s" %(self.surname, self.firstname)
+
+class PatientMotion(models.Model):
+    """
+    Stores the motion of a patient in the database, so that it can be updated
+    from various sources. Doing this simplifies various computations of time
+    calculations as well and encapulates time and motion data.
+    """
+
+    lastMotionTime = models.DateTimeField('lastMotionTime', auto_now_add=False)
+    isInMotionSince = models.DateTimeField('isInMotionSince', auto_now_add=False)
+    isInMotion = models.BooleanField(default=False)
+
+    patient = models.ForeignKey(
+                    Patient,
+                    default=-1,
+                    on_delete=models.CASCADE
+                )
+
+    def __str__(self):
+        return "%s, %s" %(self.patient.surname, self.patient.firstname)
+
+    def moves(self):
+        """
+        This method needs to be called if motion of a patient is detected by any
+        means.
+        """
+        pytz.timezone("Europe/Berlin")
+        self.lastMotionTime = pytz.utc.localize(datetime.datetime.now())
+
+        if not self.isInMotion:
+            self.isInMotionSince = pytz.utc.localize(datetime.datetime.now())
+            self.isInMotion = True
+
+        self.save()
+
+    def freezes(self):
+        """
+        This method needs to be called if the patient stops moving.
+        """
+        self.isInMotion = False
+        self.save()
+
