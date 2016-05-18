@@ -174,6 +174,9 @@ class Patient(models.Model):
     weight = models.FloatField()
     height = models.FloatField()
 
+    def __str__(self):
+        return "%s, %s" %(self.surname, self.firstname)
+
 class PatientMotion(models.Model):
     """
     Stores the motion of a patient in the database, so that it can be updated
