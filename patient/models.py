@@ -173,6 +173,7 @@ class Patient(models.Model):
     surname = models.CharField(max_length=50)
     weight = models.FloatField()
     height = models.FloatField()
+    language = models.CharField(max_length=2, default='de')
 
     def __str__(self):
         return "%s, %s" %(self.surname, self.firstname)

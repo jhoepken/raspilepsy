@@ -1,6 +1,7 @@
 from django.shortcuts import render, render_to_response
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
+from django.utils.translation import activate
 import logging
 
 from os.path import join
@@ -9,6 +10,8 @@ from .forms import QuickAddSeizure
 from patient.models import Seizure, PossibleSeizureFootage
 
 import patient.video
+
+activate('de')
 
 def index(request):
 
