@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-05-19 11:00+0200\n"
+"POT-Creation-Date: 2016-05-19 11:05+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,9 +18,30 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: patient/templates/base.html:64 patient/templates/index.html.py:3
+#: patient/templates/base.html:46 patient/templates/base.html.py:66
+#: patient/templates/index.html:3
 msgid "Dashboard"
 msgstr "Schreibtisch"
+
+#: patient/templates/base.html:50
+msgid "Monitoring"
+msgstr "&Uuml;berwachung"
+
+#: patient/templates/base.html:53
+msgid "Monitor"
+msgstr "Monitor"
+
+#: patient/templates/base.html:54
+msgid "Statistics"
+msgstr "Statistik"
+
+#: patient/templates/base.html:57
+msgid "Medication"
+msgstr "Medikation"
+
+#: patient/templates/base.html:60
+msgid "Camera offline"
+msgstr "Kamera offline"
 
 #: patient/templates/index.html:14
 msgid "Quick Add Seizure"
