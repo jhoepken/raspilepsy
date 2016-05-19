@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load i18n %}
-{% block title %}Dashboard{% endblock %}
+{% block title %} {% trans "Dashboard" %} {% endblock %}
 
 {% block content %}
 
@@ -29,7 +29,7 @@
 
         <div class="panel panel-primary">
             <div class=panel-heading>
-                <h3 class=panel-title>Add Seizure</h3>
+                <h3 class=panel-title>{% trans "Add Seizure" %}</h3>
             </div>
             <div class=panel-body>
 
@@ -37,7 +37,7 @@
                     {% csrf_token %}
                     {{ form.as_p }}
                     <button type="submit" class="btn btn-default btn-lg" value="Submit">
-                        <span class="glyphicon glyphicon-flash" aria-hidden="true"></span> Seizure now
+                        <span class="glyphicon glyphicon-flash" aria-hidden="true"></span>{% trans "Seizure Now" %}
                     </button>
                 </form>
             </div>
@@ -48,7 +48,7 @@
 
         <div class="panel panel-primary">
             <div class=panel-heading>
-                <h3 class=panel-title>Video Capture</h3>
+                <h3 class=panel-title>{% trans "Video Capture" %}</h3>
             </div>
             <div class=panel-body>
 

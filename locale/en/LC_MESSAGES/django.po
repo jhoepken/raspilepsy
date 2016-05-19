@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-05-18 18:54+0200\n"
+"POT-Creation-Date: 2016-05-19 10:48+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,12 +17,24 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
+#: patient/templates/base.html:64 patient/templates/index.html.py:3
+msgid "Dashboard"
+msgstr ""
+
 #: patient/templates/index.html:14
 msgid "Quick Add Seizure"
 msgstr ""
 
-#: patient/templates/index.html:22
+#: patient/templates/index.html:22 patient/templates/index.html.py:40
 msgid "Seizure Now"
+msgstr ""
+
+#: patient/templates/index.html:32
+msgid "Add Seizure"
+msgstr ""
+
+#: patient/templates/index.html:51
+msgid "Video Capture"
 msgstr ""
 
 #: raspilepsy/settings.py:56
