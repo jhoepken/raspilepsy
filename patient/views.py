@@ -1,6 +1,7 @@
 from django.shortcuts import render, render_to_response
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
+from django.utils import translation
 import logging
 
 from os.path import join
@@ -11,6 +12,11 @@ from patient.models import Seizure, PossibleSeizureFootage
 import patient.video
 
 def index(request):
+
+    # Uncomment these lines, to force GERMAN language. Just to check the
+    # translation.
+    # request.LANGUAGE_CODE = 'de'
+    # translation.activate('de')
 
     seizures = Seizure.objects.all()
     context = {'seizures': seizures}
