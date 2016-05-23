@@ -71,33 +71,40 @@
 </div>
 
 
-<div class="panel panel-default">
-  <!-- Default panel contents -->
-  <div class="panel-heading">{% trans "Recent Seizures" %}</div>
+<div class="container">
+<div class="row">
+    <div class="col-md-12">
+        <h2>{% trans "Recent Seizures" %}</h2>
+    <div class="panel panel-default">
+      <!-- Default panel contents -->
+      <div class="panel-heading">{% trans "Recent Seizures" %}</div>
 
-  <!-- Table -->
-  <table class="table">
-      <tr>
-          <th>#</th>
-          <th>{% trans "Date" %}</th>
-          <th>{% trans "Duration" %} [s]</th>
-          <th>{% trans "Description" %}</th>
-          <th></th>
-      </tr>
-    {% for seizure in seizures|slice:":10" %}
-      <tr>
-          <td>{{ forloop.counter }}</td>
-          <td>{{ seizure.time|date:"d-m-Y H:i:s" }}</td>
-          <td>{{ seizure.duration }}</td>
-          <td>{{ seizure.description|truncatewords:20 }}</td>
-          <td>
-            <button type="button" class="btn btn-default" aria-label="Edit">
-                <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
-            </button>
-          </td>
-      </tr>
-    {% endfor %}
-  </table>
+      <!-- Table -->
+      <table class="table">
+          <tr>
+              <th>#</th>
+              <th>{% trans "Date" %}</th>
+              <th>{% trans "Duration" %} [s]</th>
+              <th>{% trans "Description" %}</th>
+              <th></th>
+          </tr>
+        {% for seizure in seizures|slice:":10" reversed %}
+          <tr>
+              <td>{{ forloop.counter }}</td>
+              <td>{{ seizure.time|date:"d-m-Y H:i:s" }}</td>
+              <td>{{ seizure.duration }}</td>
+              <td>{{ seizure.description|truncatewords:20 }}</td>
+              <td>
+                <button type="button" class="btn btn-default" aria-label="Edit">
+                    <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+                </button>
+              </td>
+          </tr>
+        {% endfor %}
+      </table>
+    </div>
+</div>
+</div>
 </div>
 
 {% endblock %}

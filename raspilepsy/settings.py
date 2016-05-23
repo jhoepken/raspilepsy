@@ -131,3 +131,7 @@ STATIC_URL = '/static/'
 LOCALE_PATHS = (
     'locale/',
 )
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static"),
+    '/var/www/static/',
+]
