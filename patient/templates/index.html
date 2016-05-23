@@ -87,7 +87,7 @@
               <th>Description</th>
               <th></th>
           </tr>
-        {% for seizure in seizures|slice:":10" %}
+        {% for seizure in seizures|slice:":10" reversed %}
           <tr>
               <td>{{ forloop.counter }}</td>
               <td>{{ seizure.time|date:"d-m-Y H:i:s" }}</td>
