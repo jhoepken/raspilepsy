@@ -13,8 +13,10 @@ import patient.video
 
 def index(request):
 
-    request.LANGUAGE_CODE = 'de'
-    translation.activate('de')
+    # Uncomment these lines, to force GERMAN language. Just to check the
+    # translation.
+    # request.LANGUAGE_CODE = 'de'
+    # translation.activate('de')
 
     seizures = Seizure.objects.all()
     context = {'seizures': seizures}
