@@ -222,7 +222,10 @@ class PatientMotion(models.Model):
 class SleepManager(models.Manager):
 
     def isSleeping(self):
-        return self.all().order_by('-starTime')[0]
+        try:
+            return self.all().order_by('-startTime')[0]
+        except IndexError:
+            return False
 
 
 class Sleep(models.Model):
@@ -242,6 +245,7 @@ class Sleep(models.Model):
     def start(self):
         pytz.timezone("Europe/Berlin")
         self.startTime = pytz.utc.localize(datetime.datetime.now())
+        self.endTime = pytz.utc.localize(datetime.datetime.now())
         self.isSleeping = True
         self.save()
 

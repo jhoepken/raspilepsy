@@ -82,7 +82,7 @@ def sleepRegister(request):
         # if not: instantiate and start one
         # if yes: pass
         if not Sleep.objects.isSleeping():
-            sleep = sleep()
+            sleep = Sleep()
             sleep.start()
 
     elif request.POST["action"] == "wakeUp":
