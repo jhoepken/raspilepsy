@@ -231,3 +231,8 @@ class Sleep(models.Model):
                     default=-1,
                     on_delete=models.CASCADE
                 )
+
+    def start(self):
+        pytz.timezone("Europe/Berlin")
+        self.startTime = pytz.utc.localize(datetime.datetime.now())
+
