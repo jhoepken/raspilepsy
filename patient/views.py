@@ -7,7 +7,7 @@ import logging
 from os.path import join
 
 from .forms import QuickAddSeizure
-from patient.models import Seizure, PossibleSeizureFootage
+from patient.models import Seizure, PossibleSeizureFootage, Sleep
 
 import patient.video
 
@@ -78,6 +78,9 @@ def sleepRegister(request):
     """
 
     if request.POST["action"] == "sleep":
+        # Check if any sleep action is still active
+        # if not: instantiate and start one
+        # if yes: pass
         pass
 
     elif request.POST["action"] == "wakeUp":
