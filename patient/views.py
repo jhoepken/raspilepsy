@@ -71,6 +71,24 @@ def seizureNow(request):
 
     return render(request, 'index.html', context)
 
+def sleepRegister(request):
+    """
+    """
+
+    if request.POST["action"] == "sleep":
+        pass
+
+    elif request.POST["action"] == "wakeUp":
+        pass
+
+    seizures = Seizure.objects.all()
+    context = {'seizures': seizures}
+
+    form = QuickAddSeizure()
+    context['form'] = form
+
+    return render(request, 'index.html', context)
+
 def camera(request):
     if request.POST["action"] == "cameraStart":
         print "STARTING CAMERA"
