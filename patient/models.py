@@ -219,3 +219,14 @@ class PatientMotion(models.Model):
         self.isInMotion = False
         self.save()
 
+
+class Sleep(models.Model):
+
+    startTime = models.DateTimeField('startTime', auto_now_add=False)
+    endTime = models.DateTimeField('endTime', auto_now_add=False)
+
+    patient = models.ForeignKey(
+                    Patient,
+                    default=-1,
+                    on_delete=models.CASCADE
+                )
