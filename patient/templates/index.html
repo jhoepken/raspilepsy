@@ -77,8 +77,10 @@
                 <div class=panel-body>
 
                     <form action="/sleepRythm/" method="post">
+                        {% blocktrans %}
                         Use this to register register your sleep rythm and
-                        gather more data.</br>
+                        gather more data. 
+                        {% endblocktrans %}</br>
                         {% csrf_token %}
                         {{ form_sleepWake }}
                         <center>
