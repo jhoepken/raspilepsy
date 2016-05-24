@@ -73,6 +73,8 @@ def seizureNow(request):
 
 def sleepRegister(request):
     """
+    This function handles the user interactions in the panel for registering
+    sleep rythms.
     """
 
     if request.POST["action"] == "sleep":
