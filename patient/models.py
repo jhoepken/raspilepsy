@@ -219,6 +219,11 @@ class PatientMotion(models.Model):
         self.isInMotion = False
         self.save()
 
+class SleepManager(models.Manager):
+
+    def isSleeping(self):
+        return self.all().order_by('-starTime')[0]
+
 
 class Sleep(models.Model):
 
@@ -231,6 +236,8 @@ class Sleep(models.Model):
                     default=-1,
                     on_delete=models.CASCADE
                 )
+
+    objects = SleepManager()
 
     def start(self):
         pytz.timezone("Europe/Berlin")
