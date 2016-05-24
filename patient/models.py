@@ -223,7 +223,7 @@ class SleepManager(models.Manager):
 
     def isSleeping(self):
         try:
-            return self.all().order_by('-startTime')[0]
+            return self.all().order_by('-startTime')[0].isSleeping
         except IndexError:
             return False
 

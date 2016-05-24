@@ -76,6 +76,7 @@ def sleepRegister(request):
     This function handles the user interactions in the panel for registering
     sleep rythms.
     """
+    sleeping = Sleep.objects.isSleeping()
 
     if request.POST["action"] == "sleep":
         # Check if any sleep action is still active

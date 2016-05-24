@@ -91,7 +91,15 @@
                                     </button>
                                 </div>
                                 <div class="btn-group" role="group">
-                                    <button name="action" class="btn btn-default btn-lg btn-disabled" value="wakeUp" disabled>
+                                    <button name="action" class="btn btn-default btn-lg
+                                        {% if not sleeping %}
+                                        btn-disabled
+                                        {% endif %}
+                                        " value="wakeUp"
+                                        {% if not sleeping %}
+                                        disabled
+                                        {% endif %}
+                                        >
                                         <span class="glyphicon glyphicon-bell" aria-hidden="true"></span>{% trans "Wake-Up" %}
                                     </button>
                                 </div>
