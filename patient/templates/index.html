@@ -6,105 +6,126 @@
 
 
 <div class="container">
-<div class="row">
-    <div class="col-md-4">
+    <div class="row">
+        <div class="col-md-4">
 
-        <div class="panel panel-primary">
-            <div class=panel-heading>
-                <h3 class=panel-title>{% trans "Quick Add Seizure" %}</h3>
+            <div class="panel panel-primary">
+                <div class=panel-heading>
+                    <h3 class=panel-title>{% trans "Quick Add Seizure" %}</h3>
+                </div>
+                <div class=panel-body>
+
+                      <form action="/seizureNow/" method="post">
+                        {% csrf_token %}
+                        {{ form_markSeizure }}
+                        <button name="action" class="btn btn-danger btn-lg" value="seizureNow">
+                            <span class="glyphicon glyphicon-flash" aria-hidden="true"></span>{% trans "Seizure Now" %}
+                        </button>
+                    </form>
+
+                </div>
             </div>
-            <div class=panel-body>
+        </div>
+        <div class="col-md-4">
 
-                  <form action="/seizureNow/" method="post">
-                    {% csrf_token %}
-                    {{ form_markSeizure }}
-                    <button name="action" class="btn btn-danger btn-lg" value="seizureNow">
-                        <span class="glyphicon glyphicon-flash" aria-hidden="true"></span>{% trans "Seizure Now" %}
-                    </button>
-                </form>
+            <div class="panel panel-primary">
+                <div class=panel-heading>
+                    <h3 class=panel-title>{% trans "Add Seizure" %}</h3>
+                </div>
+                <div class=panel-body>
+
+                      <form action="/" method="post">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <button type="submit" class="btn btn-default btn-lg" value="Submit">
+                            <span class="glyphicon glyphicon-flash" aria-hidden="true"></span>{% trans "Seizure Now" %}
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+
+            <div class="panel panel-primary">
+                <div class=panel-heading>
+                    <h3 class=panel-title>{% trans "Video Capture" %}</h3>
+                </div>
+                <div class=panel-body>
+
+                      <form action="/camera" method="post">
+                        {% csrf_token %}
+                        {{ form_startStopCamera }}
+                        <button name="action" class="btn btn-default btn-lg" value="cameraStart">
+                            <span class="glyphicon glyphicon-play" aria-hidden="true"></span>{% trans "Start Camera" %}
+                        </button>
+                        <button name="action" class="btn btn-default btn-lg" value="cameraStop">
+                            <span class="glyphicon glyphicon-stop" aria-hidden="true"></span>{% trans "Stop Camera" %}
+                        </button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
-    <div class="col-md-4">
+    <div class="row">
+        <div class="col-md-12">
 
-        <div class="panel panel-primary">
-            <div class=panel-heading>
-                <h3 class=panel-title>{% trans "Add Seizure" %}</h3>
-            </div>
-            <div class=panel-body>
+            <div class="panel panel-primary">
+                <div class=panel-heading>
+                    <h3 class=panel-title>{% trans "Quick Add Seizure" %}</h3>
+                </div>
+                <div class=panel-body>
 
-                  <form action="/" method="post">
-                    {% csrf_token %}
-                    {{ form.as_p }}
-                    <button type="submit" class="btn btn-default btn-lg" value="Submit">
-                        <span class="glyphicon glyphicon-flash" aria-hidden="true"></span>{% trans "Seizure Now" %}
-                    </button>
-                </form>
-            </div>
-        </div>
-    </div>
+                      <form action="/seizureNow/" method="post">
+                        {% csrf_token %}
+                        {{ form_markSeizure }}
+                        <button name="action" class="btn btn-danger btn-lg" value="seizureNow">
+                            <span class="glyphicon glyphicon-flash" aria-hidden="true"></span>{% trans "Seizure Now" %}
+                        </button>
+                    </form>
 
-    <div class="col-md-4">
-
-        <div class="panel panel-primary">
-            <div class=panel-heading>
-                <h3 class=panel-title>{% trans "Video Capture" %}</h3>
-            </div>
-            <div class=panel-body>
-
-                  <form action="/camera" method="post">
-                    {% csrf_token %}
-                    {{ form_startStopCamera }}
-                    <button name="action" class="btn btn-default btn-lg" value="cameraStart">
-                        <span class="glyphicon glyphicon-play" aria-hidden="true"></span>{% trans "Start Camera" %}
-                    </button>
-                    <button name="action" class="btn btn-default btn-lg" value="cameraStop">
-                        <span class="glyphicon glyphicon-stop" aria-hidden="true"></span>{% trans "Stop Camera" %}
-                    </button>
-                </form>
+                </div>
             </div>
         </div>
     </div>
-</div>
-
-</div>
 </div>
 
 
 <div class="container">
-<div class="row">
-    <div class="col-md-12">
-        <h2>{% trans "Recent Seizures" %}</h2>
-    <div class="panel panel-default">
-      <!-- Default panel contents -->
-      <div class="panel-heading">{% trans "Recent Seizures" %}</div>
+    <div class="row">
+        <div class="col-md-12">
+            <h2>{% trans "Recent Seizures" %}</h2>
+        <div class="panel panel-default">
+        <!-- Default panel contents -->
+            <div class="panel-heading">{% trans "Recent Seizures" %}</div>
 
-      <!-- Table -->
-      <table class="table">
-          <tr>
-              <th>#</th>
-              <th>{% trans "Date" %}</th>
-              <th>{% trans "Duration" %} [s]</th>
-              <th>{% trans "Description" %}</th>
-              <th></th>
-          </tr>
-        {% for seizure in seizures|slice:":10" reversed %}
-          <tr>
-              <td>{{ forloop.counter }}</td>
-              <td>{{ seizure.time|date:"d-m-Y H:i:s" }}</td>
-              <td>{{ seizure.duration }}</td>
-              <td>{{ seizure.description|truncatewords:20 }}</td>
-              <td>
-                <button type="button" class="btn btn-default" aria-label="Edit">
-                    <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
-                </button>
-              </td>
-          </tr>
-        {% endfor %}
-      </table>
+                <!-- Table -->
+                <table class="table">
+                    <tr>
+                        <th>#</th>
+                        <th>{% trans "Date" %}</th>
+                        <th>{% trans "Duration" %} [s]</th>
+                        <th>{% trans "Description" %}</th>
+                        <th></th>
+                    </tr>
+
+                    {% for seizure in seizures|slice:":10" reversed %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ seizure.time|date:"d-m-Y H:i:s" }}</td>
+                        <td>{{ seizure.duration }}</td>
+                        <td>{{ seizure.description|truncatewords:20 }}</td>
+                        <td>
+                            <button type="button" class="btn btn-default" aria-label="Edit">
+                                <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+                            </button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
     </div>
-</div>
-</div>
 </div>
 
 {% endblock %}
