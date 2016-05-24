@@ -81,10 +81,14 @@ def sleepRegister(request):
         # Check if any sleep action is still active
         # if not: instantiate and start one
         # if yes: pass
-        pass
+        if not Sleep.objects.isSleeping():
+            sleep = sleep()
+            sleep.start()
 
     elif request.POST["action"] == "wakeUp":
-        pass
+        if Sleep.objects.isSleeping():
+            sleep = Sleep.objects.all().order_by('-startTime')[0]
+            sleep.stop()
 
     seizures = Seizure.objects.all()
     context = {'seizures': seizures}
