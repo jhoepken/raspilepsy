@@ -235,4 +235,6 @@ class Sleep(models.Model):
     def start(self):
         pytz.timezone("Europe/Berlin")
         self.startTime = pytz.utc.localize(datetime.datetime.now())
+        self.isSleeping = True
+        self.save()
 
