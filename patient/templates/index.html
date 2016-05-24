@@ -76,16 +76,12 @@
                 </div>
                 <div class=panel-body>
 
-                      <form action="/sleepRythm/" method="post">
+                    <form action="/sleepRythm/" method="post">
+                        Use this to register register your sleep rythm and
+                        gather more data.</br>
                         {% csrf_token %}
                         {{ form_sleepWake }}
                         <center>
-                            <button name="action" class="btn btn-default btn-lg" value="cameraStart">
-                                <span class="glyphicon glyphicon-play" aria-hidden="true"></span>{% trans "Sleep" %}
-                            </button>
-                            <button name="action" class="btn btn-default btn-lg" value="cameraStop">
-                                <span class="glyphicon glyphicon-stop" aria-hidden="true"></span>{% trans "Wake-Up" %}
-                            </button>
                             <div class="btn-group btn-group-justified" role="group">
                                 <div class="btn-group" role="group">
                                     <button name="action" class="btn btn-default btn-lg" value="cameraStart">
