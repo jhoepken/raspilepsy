@@ -224,6 +224,7 @@ class Sleep(models.Model):
 
     startTime = models.DateTimeField('startTime', auto_now_add=False)
     endTime = models.DateTimeField('endTime', auto_now_add=False)
+    isSleeping = models.BooleanField(default=False)
 
     patient = models.ForeignKey(
                     Patient,
