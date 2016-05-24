@@ -221,9 +221,13 @@ class PatientMotion(models.Model):
 
 class SleepManager(models.Manager):
 
-    def isSleeping(self):
+    def sleeps(self):
         try:
-            return self.all().order_by('-startTime')[0].isSleeping
+            out = self.all().order_by('-startTime').filter(isSleeping=True)[0]
+            if out:
+                return True
+            else:
+                return False
         except IndexError:
             return False
 
