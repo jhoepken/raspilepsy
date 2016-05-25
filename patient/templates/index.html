@@ -52,16 +52,24 @@
                     <h3 class=panel-title>{% trans "Video Capture" %}</h3>
                 </div>
                 <div class=panel-body>
-
                       <form action="/camera" method="post">
                         {% csrf_token %}
                         {{ form_startStopCamera }}
-                        <button name="action" class="btn btn-default btn-lg" value="cameraStart">
-                            <span class="glyphicon glyphicon-play" aria-hidden="true"></span>{% trans "Start Camera" %}
-                        </button>
-                        <button name="action" class="btn btn-default btn-lg" value="cameraStop">
-                            <span class="glyphicon glyphicon-stop" aria-hidden="true"></span>{% trans "Stop Camera" %}
-                        </button>
+                        <center>
+                            {% blocktrans %}
+                            Control the video capture via this interface. 
+                            {% endblocktrans %}
+                            <div class="btn-group btn-group-justified" role="group">
+                                <div class="btn-group" role="group">
+                                    <button name="action" class="btn btn-default btn-lg" value="cameraStart">
+                                        <span class="glyphicon glyphicon-play" aria-hidden="true"></span>{% trans "Start" %}
+                                    </button>
+                                    <button name="action" class="btn btn-default btn-lg" value="cameraStop">
+                                        <span class="glyphicon glyphicon-stop" aria-hidden="true"></span>{% trans "Stop" %}
+                                    </button>
+                                </div>
+                            </div>
+                        </center>
                     </form>
                 </div>
             </div>
