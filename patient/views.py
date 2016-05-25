@@ -82,7 +82,6 @@ def sleepRegister(request):
     sleep rythms.
     """
     sleeping = Sleep.objects.sleeps()
-    print "---", sleeping, "----"
 
     mutable = request.POST._mutable
     request.POST._mutable = True
