@@ -219,3 +219,42 @@ class PatientMotion(models.Model):
         self.isInMotion = False
         self.save()
 
+class SleepManager(models.Manager):
+
+    def sleeps(self):
+        try:
+            out = self.all().order_by('-startTime').filter(isSleeping=True)[0]
+            if out:
+                return True
+            else:
+                return False
+        except IndexError:
+            return False
+
+
+class Sleep(models.Model):
+
+    startTime = models.DateTimeField('startTime', auto_now_add=False)
+    endTime = models.DateTimeField('endTime', auto_now_add=False)
+    isSleeping = models.BooleanField(default=False)
+
+    patient = models.ForeignKey(
+                    Patient,
+                    default=-1,
+                    on_delete=models.CASCADE
+                )
+
+    objects = SleepManager()
+
+    def start(self):
+        pytz.timezone("Europe/Berlin")
+        self.startTime = pytz.utc.localize(datetime.datetime.now())
+        self.endTime = pytz.utc.localize(datetime.datetime.now())
+        self.isSleeping = True
+        self.save()
+
+    def stop(self):
+        pytz.timezone("Europe/Berlin")
+        self.endTime = pytz.utc.localize(datetime.datetime.now())
+        self.isSleeping = False
+        self.save()

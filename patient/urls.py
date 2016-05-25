@@ -14,5 +14,7 @@ urlpatterns = [
         name='dailySeizureDistributionComparison'),
 
     url(r'^camera$', views.camera, name='camera'),
+
+    url(r'^sleepRythm/register/$', views.sleepRegister, name='sleepRegister'),
 ]
 
