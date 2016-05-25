@@ -1,4 +1,5 @@
 from django.shortcuts import render, render_to_response
+from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
 from django.utils import translation
@@ -19,7 +20,11 @@ def index(request):
     # translation.activate('de')
 
     seizures = Seizure.objects.all()
-    context = {'seizures': seizures}
+    sleeping = Sleep.objects.sleeps()
+    context = {
+            'seizures': seizures,
+            'sleeping': sleeping
+            }
 
     if request.method == 'POST':
         form = QuickAddSeizure(request.POST)
@@ -77,16 +82,24 @@ def sleepRegister(request):
     sleep rythms.
     """
     sleeping = Sleep.objects.sleeps()
+    print "---", sleeping, "----"
+
+    mutable = request.POST._mutable
+    request.POST._mutable = True
 
     if request.POST["action"] == "sleep":
         if not Sleep.objects.sleeps():
             sleep = Sleep()
             sleep.start()
+        request.POST["action"] = ""
+        request.POST._mutable = mutable
 
     elif request.POST["action"] == "wakeUp":
         if Sleep.objects.sleeps():
             sleep = Sleep.objects.all().order_by('-startTime')[0]
             sleep.stop()
+        request.POST["action"] = ""
+        request.POST._mutable = mutable
 
     seizures = Seizure.objects.all()
     context = {
@@ -97,7 +110,9 @@ def sleepRegister(request):
     form = QuickAddSeizure()
     context['form'] = form
 
-    return render(request, 'index.html', context)
+    # return render(request, 'index.html', context)
+    sleeping = not sleeping
+    return HttpResponseRedirect(reverse('index'), seizures, sleeping)
 
 def camera(request):
     if request.POST["action"] == "cameraStart":
