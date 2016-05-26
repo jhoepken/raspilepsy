@@ -25,7 +25,7 @@ def index(request):
             'seizures': seizures,
             'sleeping': sleeping,
             'form_WeeklyReportForm': WeeklyReportForm,
-            'loop_times': range(10)
+            'seizureWeeks': range(10)
             }
 
     if request.method == 'POST':
