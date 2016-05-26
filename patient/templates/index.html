@@ -88,15 +88,20 @@
                       <form action="/camera" method="post">
                         {% csrf_token %}
                         {{ form_startStopCamera }}
+
+                        {% blocktrans %}
+                        Control the video capture via this tile-interface. The
+                        IR light is controled automatically.
+                        {% endblocktrans %}
+
                         <center>
-                            {% blocktrans %}
-                            Control the video capture via this interface. 
-                            {% endblocktrans %}
                             <div class="btn-group btn-group-justified" role="group">
                                 <div class="btn-group" role="group">
                                     <button name="action" class="btn btn-default btn-lg" value="cameraStart">
                                         <span class="glyphicon glyphicon-play" aria-hidden="true"></span>{% trans "Start" %}
                                     </button>
+                                </div>
+                                <div class="btn-group" role="group">
                                     <button name="action" class="btn btn-default btn-lg" value="cameraStop">
                                         <span class="glyphicon glyphicon-stop" aria-hidden="true"></span>{% trans "Stop" %}
                                     </button>
