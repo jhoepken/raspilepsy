@@ -48,6 +48,10 @@ class SeizureManager(models.Manager):
         return self.all().order_by('time')[0]
     
     def getSeizureWeeks(self):
+        """
+        A datetime object is returned, hence the the list is unique. The latest
+        week is the first one in the list.
+        """
         return reversed(
                 list(
                     set(
