@@ -8,7 +8,7 @@ import logging
 from os.path import join
 
 from .forms import *
-from patient.models import Seizure, PossibleSeizureFootage, Sleep
+from patient.models import *
 
 import patient.video
 
@@ -136,9 +136,12 @@ def monitor(request):
 def monitorWeeklyReports(request, week):
 
     seizures = Seizure.objects.all().order_by('-time')
+    patient = Patient.objects.all()[0]
+    print patient
     context = {
             'seizures': seizures,
-            'week': week
+            'week': week,
+            'patient': patient
             }
 
     return render(request, 'weeklyReport.html', context)
