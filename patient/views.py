@@ -134,15 +134,24 @@ def monitor(request):
     return render(request, 'monitor.html', context)
 
 def monitorWeeklyReports(request, week):
+    import datetime
 
     seizures = Seizure.objects.all().order_by('-time')
     patient = Patient.objects.all()[0]
-    print patient
+
+    # Get Monday of that week
+    monday = datetime.datetime.strptime(week + '-0', "%Y-%W-%w")
+    sunday = monday + datetime.timedelta(7)
+
+    weeklySeizures = Seizure.objects.filter(time__range=[monday, sunday])
+
     context = {
             'seizures': seizures,
             'week': week,
-            'patient': patient
+            'patient': patient,
+            'weeklySeizures': weeklySeizures
             }
+
 
     return render(request, 'weeklyReport.html', context)
 
