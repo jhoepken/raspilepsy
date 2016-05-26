@@ -47,6 +47,14 @@ class SeizureManager(models.Manager):
         """
         return self.all().order_by('time')[0]
     
+    def getSeizureWeeks(self):
+        return reversed(
+                list(
+                    set(
+                        [dateI.isocalendar() for dateI in self.getDaysWithSeizures()]
+                        )
+                    )
+                )
 
 class Seizure(models.Model):
 
