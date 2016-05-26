@@ -7,7 +7,7 @@ import logging
 
 from os.path import join
 
-from .forms import QuickAddSeizure
+from .forms import QuickAddSeizure, WeeklyReportForm
 from patient.models import Seizure, PossibleSeizureFootage, Sleep
 
 import patient.video
@@ -23,7 +23,8 @@ def index(request):
     sleeping = Sleep.objects.sleeps()
     context = {
             'seizures': seizures,
-            'sleeping': sleeping
+            'sleeping': sleeping,
+            'form_WeeklyReportForm': WeeklyReportForm
             }
 
     if request.method == 'POST':
