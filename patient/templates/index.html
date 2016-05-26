@@ -143,7 +143,19 @@
 
                       <form action="/monitor/weeklyReports/" method="post">
                         {% csrf_token %}
-                        {{ form_WeeklyReportForm.as_p }}
+
+                        <div class="input-group">
+                            <div class="input-group-btn">
+                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    {% trans "Select Week" %} <span class="caret"> </span>
+                                </button>
+                                <ul class="dropdown-menu">
+                                {% for x in loop_times %}
+                                    <li><a href="#">KW {{ x }}</a></li>
+                                {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
 
                         <button type="submit" class="btn btn-default btn-lg" value="Submit">
                             <span class="glyphicon glyphicon-download" aria-hidden="true"></span> {% trans "Download Report" %}

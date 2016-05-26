@@ -24,7 +24,8 @@ def index(request):
     context = {
             'seizures': seizures,
             'sleeping': sleeping,
-            'form_WeeklyReportForm': WeeklyReportForm
+            'form_WeeklyReportForm': WeeklyReportForm,
+            'loop_times': range(10)
             }
 
     if request.method == 'POST':
