@@ -44,8 +44,13 @@
                     {% blocktrans %}
                     Some statistics for the seizures of this week. This may help
                     to compare them to other weeks, especially when medications
-                    are changed.
+                    are changed.<br>
+                    The statistics are done on a <b>per day</b> basis, and not
+                    on per night. Please keep this in mind, when analysing the
+                    data.
                     {% endblocktrans %}
+
+                    {{ weeklySum }}
 
                     <div class="panel panel-default">
                         <!-- Default panel contents -->
@@ -62,8 +67,9 @@
                                 <th>Variance</th>
                                 <th>Skewness</th>
                             </tr>
+                            {% for day in days %}
                             <tr>
-                                <td>{% trans "Monday" %}</td>
+                                <td>{{ day|date:"l" }}</td>
                                 <td>0</td>
                                 <td>0</td>
                                 <td>0</td>
@@ -71,6 +77,7 @@
                                 <td>0</td>
                                 <td>0</td>
                             </tr>
+                            {% endfor %}
                         </table>
                     </div>
 

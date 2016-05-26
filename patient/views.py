@@ -135,24 +135,30 @@ def monitor(request):
 
 def monitorWeeklyReports(request, week):
     from datetime import datetime, timedelta
+    import numpy as np
 
     seizures = Seizure.objects.all().order_by('-time')
     patient = Patient.objects.all()[0]
 
     # Get Monday of that week
-    monday = datetime.strptime(week + '-0', "%Y-%W-%w")
+    monday = datetime.strptime(week + '-1', "%Y-%W-%w")
     sunday = monday + timedelta(7)
+
+    # List of all weekdays
+    days = [monday + timedelta(days=x) for x in range(0, 7)]
 
     weeklySeizures = Seizure.objects.filter(time__range=[monday, sunday])
 
     # Do some statistics
-
+    weeklySum = len(weeklySeizures)
 
     context = {
             'seizures': seizures,
             'week': week,
             'patient': patient,
             'weeklySeizures': weeklySeizures,
+            'days': days,
+            'weeklySum': weeklySum
             }
 
 
