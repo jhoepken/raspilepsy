@@ -7,7 +7,7 @@ import logging
 
 from os.path import join
 
-from .forms import QuickAddSeizure, WeeklyReportForm
+from .forms import *
 from patient.models import Seizure, PossibleSeizureFootage, Sleep
 
 import patient.video
