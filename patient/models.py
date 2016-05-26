@@ -53,9 +53,16 @@ class SeizureManager(models.Manager):
         week is the first one in the list.
         """
         return reversed(
-                list(
-                    set(
-                        [dateI.isocalendar() for dateI in self.getDaysWithSeizures()]
+                sorted(
+                    list(
+                        set(
+                            [
+                                "%i-%i" %(
+                                    int(dateI.isocalendar()[0]),
+                                    int(dateI.isocalendar()[1])
+                                    )
+                                for dateI in self.getDaysWithSeizures()]
+                            )
                         )
                     )
                 )
