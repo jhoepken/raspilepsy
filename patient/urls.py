@@ -15,6 +15,9 @@ urlpatterns = [
     url(r'^monitor/weeklyReports/$',
         views.monitorWeeklyReports,
         name='monitorWeeklyReports'),
+    url(r'^monitor/weeklyReports/(?P<week>[0-9]{4}-[0-9]{2})/$',
+        views.monitorWeeklyReports,
+        name='monitorWeeklyReports'),
 
     url(r'^camera$', views.camera, name='camera'),
 
