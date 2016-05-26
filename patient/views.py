@@ -24,7 +24,6 @@ def index(request):
     context = {
             'seizures': seizures,
             'sleeping': sleeping,
-            'form_WeeklyReportForm': WeeklyReportForm,
             'seizureWeeks': Seizure.objects.getSeizureWeeks()
             }
 
