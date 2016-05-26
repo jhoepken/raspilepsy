@@ -171,7 +171,7 @@ def seizureFrequency(request):
     from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
     from matplotlib.figure import Figure
     from matplotlib.dates import DateFormatter
-    from numpy import mean, array, max
+    from numpy import mean, array, max, nan_to_num
 
     seizures = Seizure.objects.all()
 
@@ -179,18 +179,21 @@ def seizureFrequency(request):
 
     seizureFrequency = [len(sI) for sI in Seizure.objects.getSeizuresPerNight()]
 
+
     time = [seizure.time for seizure in seizures]
     durationMean = []
     for seizure in Seizure.objects.getSeizuresPerNight():
         durationMean.append(mean([sI.duration for sI in seizure]))
 
+    # Get rid of nan
+    durationMean = nan_to_num(durationMean)
 
     durationMeanNorm = durationMean/max(durationMean)
 
     error_config = {'ecolor': '0.3'}
     fig=Figure(facecolor="white",figsize=(12, 6))
     ax=fig.add_subplot(111)
-    # ax.set_xlabel("Time")
+    ax.set_xlabel("Time")
     ax.set_ylabel("Seizures [-]")
     ax.grid(True)
     p = ax.bar(
