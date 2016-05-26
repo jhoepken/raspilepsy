@@ -133,6 +133,13 @@ def monitor(request):
 
     return render(request, 'monitor.html', context)
 
+def monitorWeeklyReports(request):
+
+    seizures = Seizure.objects.all().order_by('-time')
+    context = {'seizures': seizures}
+
+    return render(request, 'monitor.html', context)
+
 def monitorStatistics(request):
 
     seizures = Seizure.objects.all()
