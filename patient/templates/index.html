@@ -141,11 +141,13 @@
                 </div>
                 <div class=panel-body>
 
-                    {% blocktrans %}
-                    Select a week to obtain a weekly report for that week. This
-                    report can then be sent to your doctor in charge, or put
-                    your own documents.
-                    {% endblocktrans %}
+                    <div style="margin-bottom: 2em">
+                        {% blocktrans %}
+                        Select a week to obtain a weekly report for that week. This
+                        report can then be sent to your doctor in charge, or put
+                        your own documents.
+                        {% endblocktrans %}
+                    </div>
 
                       <form action="/monitor/weeklyReports/" method="post">
                         {% csrf_token %}
