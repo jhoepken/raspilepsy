@@ -145,11 +145,14 @@ def monitorWeeklyReports(request, week):
 
     weeklySeizures = Seizure.objects.filter(time__range=[monday, sunday])
 
+    # Do some statistics
+
+
     context = {
             'seizures': seizures,
             'week': week,
             'patient': patient,
-            'weeklySeizures': weeklySeizures
+            'weeklySeizures': weeklySeizures,
             }
 
 
