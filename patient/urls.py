@@ -12,6 +12,9 @@ urlpatterns = [
     url(r'^monitor/statistics/dailySeizureDistributionComparison.png$',
         views.dailySeizureDistributionComparison,
         name='dailySeizureDistributionComparison'),
+    url(r'^monitor/weeklyReports/$',
+        views.monitorWeeklyReports,
+        name='monitorWeeklyReports'),
 
     url(r'^camera$', views.camera, name='camera'),
 
