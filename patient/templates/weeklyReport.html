@@ -117,12 +117,33 @@
                             {% endfor %}
                         </table>
                     </div>
-                    <img src="/monitor/statistics/seizureFrequency.png/{{week}}/"></br>
 
                 </div>
             </div>
         </div>
+    </div>
 
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-primary">
+                <div class=panel-heading>
+                    <h3 class=panel-title>{% trans "Weekly Seizure Frequency Distribution" %}</h3>
+                </div>
+                <div class=panel-body>
+                    {% blocktrans %}
+                    Seizure Frequency per night (between 14:00h and 13:59h). 
+                    The length `l` of the error bar is normalised by the maximal
+                    seizure duration `d_\text{max}` and suffices: `l \in [0;
+                    1]`. The intensity is not accounted for in this diagram,
+                    since this is a <em>subjective</em> measure.
+                    {% endblocktrans %}
+
+                    <center>
+                        <img src="/monitor/statistics/seizureFrequency.png/{{week}}/">
+                    </center>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
