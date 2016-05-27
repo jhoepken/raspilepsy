@@ -61,11 +61,18 @@
                                 </li>
                                 <li class="list-group-item">
                                     <span class="badge">{{ weekly.meanDuration|floatformat:3 }}</span>
-                                    {% trans "Mean Seizure Duration [s]" %}
+                                    {% trans "Mean Seizure Duration" %}
+                                    `[s]`
                                 </li>
                                 <li class="list-group-item">
                                     <span class="badge">{{ weekly.stdDuration|floatformat:3 }}</span>
-                                    {% trans "Standard Deviation of Seizure Duration [s]" %}
+                                    {% trans "Standard Deviation of Seizure Duration" %}
+                                    `[s]`
+                                </li>
+                                <li class="list-group-item">
+                                    <span class="badge">{{ weekly.varianceDuration|floatformat:3 }}</span>
+                                    {% trans "Standard Deviation of Seizure Duration" %}
+                                    `[s^2]`
                                 </li>
                             </ul>
 
