@@ -60,6 +60,16 @@
                                     {% trans "Total Seizures per week" %}
                                 </li>
                                 <li class="list-group-item">
+                                    <span class="badge">{{ weekly.minDuration }}</span>
+                                    {% trans "Shortest Seizure Duration" %}
+                                    `[s]`
+                                </li>
+                                <li class="list-group-item">
+                                    <span class="badge">{{ weekly.maxDuration }}</span>
+                                    {% trans "Longest Seizure Duration" %}
+                                    `[s]`
+                                </li>
+                                <li class="list-group-item">
                                     <span class="badge">{{ weekly.meanDuration|floatformat:3 }}</span>
                                     {% trans "Mean Seizure Duration" %}
                                     `[s]`

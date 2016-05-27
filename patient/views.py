@@ -155,6 +155,8 @@ def monitorWeeklyReports(request, week):
             'meanDuration': np.mean([sI.duration for sI in weeklySeizures]),
             'stdDuration': np.std([sI.duration for sI in weeklySeizures]),
             'varianceDuration': np.var([sI.duration for sI in weeklySeizures]),
+            'minDuration': np.min([sI.duration for sI in weeklySeizures]),
+            'maxDuration': np.max([sI.duration for sI in weeklySeizures]),
             }
 
     context = {
