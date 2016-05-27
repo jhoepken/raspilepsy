@@ -141,6 +141,8 @@ def monitorWeeklyReports(request, week):
     patient = Patient.objects.all()[0]
 
     # Get Monday of that week
+    # We have to add "-1" as a string, because the european week starts on a
+    # Monday. As of now, this is hardcoded.
     monday = datetime.strptime(week + '-1', "%Y-%W-%w")
     sunday = monday + timedelta(7)
 
