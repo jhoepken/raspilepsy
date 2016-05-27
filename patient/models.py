@@ -27,9 +27,10 @@ class SeizureManager(models.Manager):
         dateRange = [base - datetime.timedelta(days=x) for x in reversed(range(0, timeRange.days))]
         return dateRange
 
-    def getSeizuresPerNight(self):
+    def getSeizuresPerNight(self, days=None):
         from datetime import timedelta
-        days = self.getDaysWithSeizures()
+        if not days:
+            days = self.getDaysWithSeizures()
 
         seizures = []
 

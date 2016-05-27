@@ -133,12 +133,9 @@ def monitor(request):
 
     return render(request, 'monitor.html', context)
 
-def monitorWeeklyReports(request, week):
+def getWeekSeizures(week):
     from datetime import datetime, timedelta
-    import numpy as np
-
     seizures = Seizure.objects.all().order_by('-time')
-    patient = Patient.objects.all()[0]
 
     # Get Monday of that week
     # We have to add "-1" as a string, because the european week starts on a
@@ -146,10 +143,18 @@ def monitorWeeklyReports(request, week):
     monday = datetime.strptime(week + '-1', "%Y-%W-%w")
     sunday = monday + timedelta(7)
 
-    # List of all weekdays
     days = [monday + timedelta(days=x) for x in range(0, 7)]
 
-    weeklySeizures = Seizure.objects.filter(time__range=[monday, sunday])
+    return (Seizure.objects.filter(time__range=[monday, sunday]), days)
+
+def monitorWeeklyReports(request, week):
+    import numpy as np
+
+    seizures = Seizure.objects.all().order_by('-time')
+    patient = Patient.objects.all()[0]
+
+
+    weeklySeizures, days = getWeekSeizures(week)
 
     # Do some statistics
     weekly = {
@@ -208,23 +213,25 @@ def seizureDistribution(request):
 
     return response
 
-def seizureFrequency(request, seizures=None):
+def seizureFrequency(request, week=None):
     from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
     from matplotlib.figure import Figure
     from matplotlib.dates import DateFormatter
     from numpy import mean, array, max, nan_to_num
 
-    if not seizures:
+
+    if not week:
         seizures = Seizure.objects.all()
+        days = Seizure.objects.getDaysWithSeizures()
+    else:
+        seizures, days = getWeekSeizures(week)
 
-    days = Seizure.objects.getDaysWithSeizures()
-
-    seizureFrequency = [len(sI) for sI in Seizure.objects.getSeizuresPerNight()]
+    seizureFrequency = [len(sI) for sI in Seizure.objects.getSeizuresPerNight(days)]
 
 
     time = [seizure.time for seizure in seizures]
     durationMean = []
-    for seizure in Seizure.objects.getSeizuresPerNight():
+    for seizure in Seizure.objects.getSeizuresPerNight(days):
         durationMean.append(mean([sI.duration for sI in seizure]))
 
     # Get rid of nan
@@ -238,6 +245,12 @@ def seizureFrequency(request, seizures=None):
     ax.set_xlabel("Time")
     ax.set_ylabel("Seizures [-]")
     ax.grid(True)
+    print "------"
+    print days
+    print seizureFrequency
+    print "------"
+    print len(days)
+    print len(seizureFrequency)
     p = ax.bar(
             days,
             seizureFrequency,
