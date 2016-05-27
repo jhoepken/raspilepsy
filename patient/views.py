@@ -218,6 +218,8 @@ def seizureFrequency(request, week=None):
     from matplotlib.figure import Figure
     from matplotlib.dates import DateFormatter
     from numpy import mean, array, max, nan_to_num
+    import seaborn as sns
+    sns.set(style="darkgrid", palette="Set2")
 
 
     if not week:
