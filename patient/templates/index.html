@@ -14,13 +14,21 @@
                     <h3 class=panel-title>{% trans "Quick Add Seizure" %}</h3>
                 </div>
                 <div class=panel-body>
+                    {% blocktrans %}
 
-                      <form action="/seizureNow/" method="post">
+                    Please press this button, whenever you have a seizure.
+
+                    {% endblocktrans %}
+
+                    <form action="/seizureNow/" method="post">
+
                         {% csrf_token %}
                         {{ form_markSeizure }}
-                        <button name="action" class="btn btn-danger btn-lg" value="seizureNow">
-                            <span class="glyphicon glyphicon-flash" aria-hidden="true"></span>{% trans "Seizure Now" %}
-                        </button>
+                        <center>
+                            <button name="action" class="btn btn-danger btn-lg" value="seizureNow">
+                                <span class="glyphicon glyphicon-flash" aria-hidden="true"></span>{% trans "Seizure Now" %}
+                            </button>
+                        </center>
                     </form>
 
                 </div>
@@ -80,15 +88,20 @@
                       <form action="/camera" method="post">
                         {% csrf_token %}
                         {{ form_startStopCamera }}
+
+                        {% blocktrans %}
+                        Control the video capture via this tile-interface. The
+                        IR light is controled automatically.
+                        {% endblocktrans %}
+
                         <center>
-                            {% blocktrans %}
-                            Control the video capture via this interface. 
-                            {% endblocktrans %}
                             <div class="btn-group btn-group-justified" role="group">
                                 <div class="btn-group" role="group">
                                     <button name="action" class="btn btn-default btn-lg" value="cameraStart">
                                         <span class="glyphicon glyphicon-play" aria-hidden="true"></span>{% trans "Start" %}
                                     </button>
+                                </div>
+                                <div class="btn-group" role="group">
                                     <button name="action" class="btn btn-default btn-lg" value="cameraStop">
                                         <span class="glyphicon glyphicon-stop" aria-hidden="true"></span>{% trans "Stop" %}
                                     </button>
@@ -109,13 +122,47 @@
                 </div>
                 <div class=panel-body>
 
-                      <form action="/" method="post">
+                    <form action="/" method="post">
                         {% csrf_token %}
                         {{ form.as_p }}
                         <button type="submit" class="btn btn-default btn-lg" value="Submit">
                             <span class="glyphicon glyphicon-flash" aria-hidden="true"></span>{% trans "Seizure Now" %}
                         </button>
                     </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+
+            <div class="panel panel-info">
+                <div class=panel-heading>
+                    <h3 class=panel-title>{% trans "Weekly Reports" %}</h3>
+                </div>
+                <div class=panel-body>
+
+                    <div style="margin-bottom: 2em">
+                        {% blocktrans %}
+                        Select a week to obtain a weekly report for that week. This
+                        report can then be sent to your doctor in charge, or put
+                        your own documents.
+                        {% endblocktrans %}
+                    </div>
+
+
+                    <div class="input-group">
+                        <div class="input-group-btn">
+                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                {% trans "Select Week" %} <span class="caret"> </span>
+                            </button>
+                            <ul class="dropdown-menu">
+                            {% for x in seizureWeeks %}
+                                <li><a href="/monitor/weeklyReports/{{ x }}/">KW {{ x }}</a></li>
+                            {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>

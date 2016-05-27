@@ -27,9 +27,10 @@ class SeizureManager(models.Manager):
         dateRange = [base - datetime.timedelta(days=x) for x in reversed(range(0, timeRange.days))]
         return dateRange
 
-    def getSeizuresPerNight(self):
+    def getSeizuresPerNight(self, days=None):
         from datetime import timedelta
-        days = self.getDaysWithSeizures()
+        if not days:
+            days = self.getDaysWithSeizures()
 
         seizures = []
 
@@ -47,6 +48,25 @@ class SeizureManager(models.Manager):
         """
         return self.all().order_by('time')[0]
     
+    def getSeizureWeeks(self):
+        """
+        A datetime object is returned, hence the the list is unique. The latest
+        week is the first one in the list.
+        """
+        return reversed(
+                sorted(
+                    list(
+                        set(
+                            [
+                                "%i-%i" %(
+                                    int(dateI.isocalendar()[0]),
+                                    int(dateI.isocalendar()[1])
+                                    )
+                                for dateI in self.getDaysWithSeizures()]
+                            )
+                        )
+                    )
+                )
 
 class Seizure(models.Model):
 

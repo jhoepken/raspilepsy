@@ -7,8 +7,8 @@ import logging
 
 from os.path import join
 
-from .forms import QuickAddSeizure
-from patient.models import Seizure, PossibleSeizureFootage, Sleep
+from .forms import *
+from patient.models import *
 
 import patient.video
 
@@ -23,7 +23,8 @@ def index(request):
     sleeping = Sleep.objects.sleeps()
     context = {
             'seizures': seizures,
-            'sleeping': sleeping
+            'sleeping': sleeping,
+            'seizureWeeks': Seizure.objects.getSeizureWeeks()
             }
 
     if request.method == 'POST':
@@ -132,6 +133,51 @@ def monitor(request):
 
     return render(request, 'monitor.html', context)
 
+def getWeekSeizures(week):
+    from datetime import datetime, timedelta
+    seizures = Seizure.objects.all().order_by('-time')
+
+    # Get Monday of that week
+    # We have to add "-1" as a string, because the european week starts on a
+    # Monday. As of now, this is hardcoded.
+    monday = datetime.strptime(week + '-1', "%Y-%W-%w")
+    sunday = monday + timedelta(7)
+
+    days = [monday + timedelta(days=x) for x in range(0, 7)]
+
+    return (Seizure.objects.filter(time__range=[monday, sunday]), days)
+
+def monitorWeeklyReports(request, week):
+    import numpy as np
+
+    seizures = Seizure.objects.all().order_by('-time')
+    patient = Patient.objects.all()[0]
+
+
+    weeklySeizures, days = getWeekSeizures(week)
+
+    # Do some statistics
+    weekly = {
+            'sum': len(weeklySeizures),
+            'meanDuration': np.mean([sI.duration for sI in weeklySeizures]),
+            'stdDuration': np.std([sI.duration for sI in weeklySeizures]),
+            'varianceDuration': np.var([sI.duration for sI in weeklySeizures]),
+            'minDuration': np.min([sI.duration for sI in weeklySeizures]),
+            'maxDuration': np.max([sI.duration for sI in weeklySeizures]),
+            }
+
+    context = {
+            'seizures': seizures,
+            'week': week,
+            'patient': patient,
+            'weeklySeizures': weeklySeizures,
+            'days': days,
+            'weekly': weekly
+            }
+
+
+    return render(request, 'weeklyReport.html', context)
+
 def monitorStatistics(request):
 
     seizures = Seizure.objects.all()
@@ -167,22 +213,27 @@ def seizureDistribution(request):
 
     return response
 
-def seizureFrequency(request):
+def seizureFrequency(request, week=None):
     from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
     from matplotlib.figure import Figure
     from matplotlib.dates import DateFormatter
     from numpy import mean, array, max, nan_to_num
+    import seaborn as sns
+    sns.set(style="darkgrid", palette="Set2")
 
-    seizures = Seizure.objects.all()
 
-    days = Seizure.objects.getDaysWithSeizures()
+    if not week:
+        seizures = Seizure.objects.all()
+        days = Seizure.objects.getDaysWithSeizures()
+    else:
+        seizures, days = getWeekSeizures(week)
 
-    seizureFrequency = [len(sI) for sI in Seizure.objects.getSeizuresPerNight()]
+    seizureFrequency = [len(sI) for sI in Seizure.objects.getSeizuresPerNight(days)]
 
 
     time = [seizure.time for seizure in seizures]
     durationMean = []
-    for seizure in Seizure.objects.getSeizuresPerNight():
+    for seizure in Seizure.objects.getSeizuresPerNight(days):
         durationMean.append(mean([sI.duration for sI in seizure]))
 
     # Get rid of nan

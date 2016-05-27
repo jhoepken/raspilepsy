@@ -1,0 +1,147 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% block title %} {% trans "Weekly Report for" %} {{ week }} {% endblock %}
+
+{% block content %}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+
+            <div class="panel panel-primary">
+                <div class=panel-heading>
+                    <h3 class=panel-title>{% trans "Weekly Summary" %}</h3>
+                </div>
+                <div class=panel-body>
+                    {% blocktrans %}
+                    This is a weekly seizure summary for <b>{{ patient }}</b>.
+
+                    <div class="well well-sm" style="margin-top:2em">
+                        It is generated automatically and provided <em>as is</em>.
+                        This means is provided without warranty of any kind,
+                        including but not limited to the warranties of
+                        merchantability, fitness for a particular purpose and
+                        noninfringement. In no event shall the authors or copyright
+                        holders be liable for any claim, damages or other liability,
+                        whether in an action of contract, tort or otherwise, arising
+                        from, out of or in connection with the software or the use
+                        or other dealings in the software.
+                    </div>
+                    {% endblocktrans %}
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+
+            <div class="panel panel-primary">
+                <div class=panel-heading>
+                    <h3 class=panel-title>{% trans "Seizure Statistics" %}</h3>
+                </div>
+                <div class=panel-body>
+                    {% blocktrans %}
+                    Some statistics for the seizures of this week. This may help
+                    to compare them to other weeks, especially when medications
+                    are changed.<br>
+                    The statistics are done on a <b>per day</b> basis, and not
+                    on per night. Please keep this in mind, when analysing the
+                    data. This is only true if not stated otherwise. 
+                    {% endblocktrans %}
+
+                    <div class="panel panel-default">
+                        <!-- Default panel contents -->
+                        <div class="panel-heading">{% trans "Week Statistics" %}</div>
+
+                            <ul class="list-group">
+                                <li class="list-group-item">
+                                    <span class="badge">{{ weekly.sum }}</span>
+                                    {% trans "Total Seizures per week" %}
+                                </li>
+                                <li class="list-group-item">
+                                    <span class="badge">{{ weekly.minDuration }}</span>
+                                    {% trans "Shortest Seizure Duration" %}
+                                    `[s]`
+                                </li>
+                                <li class="list-group-item">
+                                    <span class="badge">{{ weekly.maxDuration }}</span>
+                                    {% trans "Longest Seizure Duration" %}
+                                    `[s]`
+                                </li>
+                                <li class="list-group-item">
+                                    <span class="badge">{{ weekly.meanDuration|floatformat:3 }}</span>
+                                    {% trans "Mean Seizure Duration" %}
+                                    `[s]`
+                                </li>
+                                <li class="list-group-item">
+                                    <span class="badge">{{ weekly.stdDuration|floatformat:3 }}</span>
+                                    {% trans "Standard Deviation of Seizure Duration" %}
+                                    `[s]`
+                                </li>
+                                <li class="list-group-item">
+                                    <span class="badge">{{ weekly.varianceDuration|floatformat:3 }}</span>
+                                    {% trans "Standard Deviation of Seizure Duration" %}
+                                    `[s^2]`
+                                </li>
+                            </ul>
+
+                    </div>
+
+
+                    <!--<div class="panel panel-default">-->
+                        <!--[> Default panel contents <]-->
+                        <!--<div class="panel-heading">{% trans "Daily Statistics" %}</div>-->
+
+                        <!--[> Table <]-->
+                        <!--<table class="table">-->
+                            <!--<tr>-->
+                                <!--<th>Day</th>-->
+                                <!--<th>Sum</th>-->
+                                <!--<th>Average</th>-->
+                                <!--<th>Median</th>-->
+                                <!--<th>Sigma</th>-->
+                                <!--<th>Variance</th>-->
+                                <!--<th>Skewness</th>-->
+                            <!--</tr>-->
+                            <!--{% for day in days %}-->
+                            <!--<tr>-->
+                                <!--<td>{{ day|date:"l" }}</td>-->
+                                <!--<td>0</td>-->
+                                <!--<td>0</td>-->
+                                <!--<td>0</td>-->
+                                <!--<td>0</td>-->
+                                <!--<td>0</td>-->
+                                <!--<td>0</td>-->
+                            <!--</tr>-->
+                            <!--{% endfor %}-->
+                        <!--</table>-->
+                    <!--</div>-->
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-primary">
+                <div class=panel-heading>
+                    <h3 class=panel-title>{% trans "Weekly Seizure Frequency Distribution" %}</h3>
+                </div>
+                <div class=panel-body>
+                    {% blocktrans %}
+                    Seizure Frequency per night (between 14:00h and 13:59h). 
+                    The length `l` of the error bar is normalised by the maximal
+                    seizure duration `d_\text{max}` and suffices: `l \in [0;
+                    1]`. The intensity is not accounted for in this diagram,
+                    since this is a <em>subjective</em> measure.
+                    {% endblocktrans %}
+
+                    <center>
+                        <img src="/monitor/statistics/seizureFrequency.png/{{week}}/">
+                    </center>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
