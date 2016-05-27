@@ -247,12 +247,6 @@ def seizureFrequency(request, week=None):
     ax.set_xlabel("Time")
     ax.set_ylabel("Seizures [-]")
     ax.grid(True)
-    print "------"
-    print days
-    print seizureFrequency
-    print "------"
-    print len(days)
-    print len(seizureFrequency)
     p = ax.bar(
             days,
             seizureFrequency,
