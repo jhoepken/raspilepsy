@@ -6,7 +6,7 @@
 
 <div class="container">
     <div class="row">
-        <div class="col-md-12">
+        <div class="col-md-6">
 
             <div class="panel panel-primary">
                 <div class=panel-heading>
@@ -31,10 +31,7 @@
                 </div>
             </div>
         </div>
-    </div>
-
-    <div class="row">
-        <div class="col-md-12">
+        <div class="col-md-6">
 
             <div class="panel panel-primary">
                 <div class=panel-heading>
@@ -89,34 +86,34 @@
                     </div>
 
 
-                    <div class="panel panel-default">
-                        <!-- Default panel contents -->
-                        <div class="panel-heading">{% trans "Daily Statistics" %}</div>
+                    <!--<div class="panel panel-default">-->
+                        <!--[> Default panel contents <]-->
+                        <!--<div class="panel-heading">{% trans "Daily Statistics" %}</div>-->
 
-                        <!-- Table -->
-                        <table class="table">
-                            <tr>
-                                <th>Day</th>
-                                <th>Sum</th>
-                                <th>Average</th>
-                                <th>Median</th>
-                                <th>Sigma</th>
-                                <th>Variance</th>
-                                <th>Skewness</th>
-                            </tr>
-                            {% for day in days %}
-                            <tr>
-                                <td>{{ day|date:"l" }}</td>
-                                <td>0</td>
-                                <td>0</td>
-                                <td>0</td>
-                                <td>0</td>
-                                <td>0</td>
-                                <td>0</td>
-                            </tr>
-                            {% endfor %}
-                        </table>
-                    </div>
+                        <!--[> Table <]-->
+                        <!--<table class="table">-->
+                            <!--<tr>-->
+                                <!--<th>Day</th>-->
+                                <!--<th>Sum</th>-->
+                                <!--<th>Average</th>-->
+                                <!--<th>Median</th>-->
+                                <!--<th>Sigma</th>-->
+                                <!--<th>Variance</th>-->
+                                <!--<th>Skewness</th>-->
+                            <!--</tr>-->
+                            <!--{% for day in days %}-->
+                            <!--<tr>-->
+                                <!--<td>{{ day|date:"l" }}</td>-->
+                                <!--<td>0</td>-->
+                                <!--<td>0</td>-->
+                                <!--<td>0</td>-->
+                                <!--<td>0</td>-->
+                                <!--<td>0</td>-->
+                                <!--<td>0</td>-->
+                            <!--</tr>-->
+                            <!--{% endfor %}-->
+                        <!--</table>-->
+                    <!--</div>-->
 
                 </div>
             </div>
