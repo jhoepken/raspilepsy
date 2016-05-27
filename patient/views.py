@@ -150,7 +150,10 @@ def monitorWeeklyReports(request, week):
     weeklySeizures = Seizure.objects.filter(time__range=[monday, sunday])
 
     # Do some statistics
-    weeklySum = len(weeklySeizures)
+    weekly = {
+            'sum': len(weeklySeizures),
+            'meanDuration': np.mean([sI.duration for sI in weeklySeizures])
+            }
 
     context = {
             'seizures': seizures,
@@ -158,7 +161,7 @@ def monitorWeeklyReports(request, week):
             'patient': patient,
             'weeklySeizures': weeklySeizures,
             'days': days,
-            'weeklySum': weeklySum
+            'weekly': weekly
             }
 
 
