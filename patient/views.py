@@ -208,13 +208,14 @@ def seizureDistribution(request):
 
     return response
 
-def seizureFrequency(request):
+def seizureFrequency(request, seizures=None):
     from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
     from matplotlib.figure import Figure
     from matplotlib.dates import DateFormatter
     from numpy import mean, array, max, nan_to_num
 
-    seizures = Seizure.objects.all()
+    if not seizures:
+        seizures = Seizure.objects.all()
 
     days = Seizure.objects.getDaysWithSeizures()
 
