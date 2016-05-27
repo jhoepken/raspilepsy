@@ -50,7 +50,19 @@
                     data.
                     {% endblocktrans %}
 
-                    {{ weeklySum }}
+                    <div class="panel panel-default">
+                        <!-- Default panel contents -->
+                        <div class="panel-heading">{% trans "Week Statistics" %}</div>
+
+                            <ul class="list-group">
+                                <li class="list-group-item">
+                                    <span class="badge">{{ weeklySum }}</span>
+                                    {% trans "Total Seizures per week" %}
+                                </li>
+                            </ul>
+
+                    </div>
+
 
                     <div class="panel panel-default">
                         <!-- Default panel contents -->
